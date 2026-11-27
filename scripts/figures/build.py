@@ -93,6 +93,13 @@ COPIES = (
      "range the data alone allow. The last group is the cost of making the statement about a continuous "
      "spectrum. Made before zero-width lines were fitted: the line spectra the report does not flag, which "
      "this figure is about, are reported the same way now; the flagged ones are in zero_width_lines.png."),
+    ("2_real_data", "dqmc_few_bins.png", ("out/dqmc/bin_count_{m}/bin_count.png",),
+     "The three DQMC runs with known answers, continued from subsets of 25 to 200 of their 400 bins. At "
+     "beta = 8 the intervals fail on the subsets. On the dimer the cause is in the bins: rare bins carry "
+     "the mean, and an error bar taken from few bins is far too small.",
+     "One row per run. Left: share of windows whose exact weight lies inside the stated 90% (filled) and 50% "
+     "(open) intervals, at the defaults (blue) and with the spectrum stated to be discrete (green); dashes "
+     "are nominal. Middle: the error. Right: the mean width of the 90% interval."),
     ("3_error_bars", "bands_of_many_lines.png", ("out/step3/line_density_{m}/line_density.png",),
      "Where the intervals fail: bands of N lines at random positions under a semicircle, N from 4 to 512. "
      "For the data such a band is a continuous one with more structure than the model was trained on. The "

@@ -184,6 +184,14 @@ Left: share of windows whose exact weight lies inside the stated intervals, with
 
 ![discrete_statement.png](3_error_bars/discrete_statement.png)
 
+**dqmc_few_bins.png**
+
+The three DQMC runs with known answers, continued from subsets of 25 to 200 of their 400 bins. At beta = 8 the intervals fail on the subsets. On the dimer the cause is in the bins: rare bins carry the mean, and an error bar taken from few bins is far too small.
+
+One row per run. Left: share of windows whose exact weight lies inside the stated 90% (filled) and 50% (open) intervals, at the defaults (blue) and with the spectrum stated to be discrete (green); dashes are nominal. Middle: the error. Right: the mean width of the 90% interval.
+
+![dqmc_few_bins.png](2_real_data/dqmc_few_bins.png)
+
 **bands_of_many_lines.png**
 
 Where the intervals fail: bands of N lines at random positions under a semicircle, N from 4 to 512. For the data such a band is a continuous one with more structure than the model was trained on. The report flags only the smallest N, and from 16 to 256 lines at beta = 8 its intervals are too narrow with no warning.

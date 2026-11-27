@@ -1864,6 +1864,51 @@ yet (the bin-count judge on the DQMC runs is running).  Not done: a warning
 for correlated bins (`autocorrelation_report` exists and the report does not
 call it).
 
+(xxxv) **Few bins on the real DQMC runs: the intervals fail at β = 8, and on
+the dimer the cause is in the bins** (*measured*, 2026-11-27;
+`scripts/dqmc/bin_count_judge.py`, `run_bin_count.sh`,
+`out/dqmc/bin_count_F3L_60k_s1/`).  Every judge so far used 400 bins or
+synthetic noise.  Here the three DQMC runs with known answers are continued
+from subsets of 25, 50, 100 and 200 consecutive bins (six subsets each) and
+from all 400, at the defaults and with `discrete=True`, 200 samples, and the
+stated intervals are scored against the exact window weights (42 windows per
+count).
+*Dimer at β = 2*: holds at every count (0.55 / 0.95 at 25 bins, 0.74–0.81 /
+1.00 from 50; conservative).
+*Dimer at β = 8*: 0.40 / 0.62 at 25 bins, 0.52 / 0.74 at 50, 0.48 / 0.67 at
+100, 0.43 / 0.57 at 200, and 7 of 7 windows with all 400; with the statement
+0.45 / 0.71, 0.50 / 0.71, 0.48 / 0.64, 0.48 / 0.60 and 5 of 7.  The 90%
+intervals are as wide at 25 bins as at 400 (0.05).
+*Ring of four sites*: at the defaults 0.24–0.31 / 0.55–0.74 at every count
+(the defect of (xxxiii)); with the statement 0.33 / 0.79 at 25 bins, 0.40 /
+0.74 at 50, 0.43 / 0.88 at 100, 0.48 / 0.95 at 200, 7 of 7 at 400.
+*Why the dimer fails*: the exact G(τ) itself does not fit the subsets within
+their error bars.  Its χ² against a subset, over the value of a perfect fit:
+2.2 to 23.6 at 25 bins, 1.1 to 4.3 at 50, 1.5 to 2.9 at 200, 1.34 at 400
+(the dimer at β = 2: 0.9 to 2.6 at every count but one subset; the ring: 0.9
+to 2.7 with two subsets at 6 and 10).  The bins are far from Gaussian: at
+τ = β/2 the means of blocks of 25 bins differ from the mean of all 400 by 6.2
+of the block's own error bars (rms; largest 15), against 0.7 on the dimer at
+β = 2 and 1.8 on the ring, while the autocorrelation of the bins is nothing
+(statistical inefficiency 1.01; ring 1.37).  Rare bins carry the mean, so an
+error bar taken from few bins is far too small, and no method can be right
+on those data as given.
+*The range the data alone allow* could not be computed for 14 of 42 windows
+at 25 bins and 21 of 42 at 50, on the dimer at β = 8 and on the ring alike
+(on the ring 7 of 42 at 100 as well; never on the dimer at β = 2, which has
+41 time slices): no non-negative spectrum has every whitened residual within
+3.5 error bars.  With fewer bins than time slices that is a matter of the
+covariance estimate as much as of the bins.  Where it was computed it held
+the exact weight in every window.
+Reading: two different things.  (a) The report has no check of the bins: it
+should say when blocks of bins disagree beyond their error bars, and when no
+non-negative spectrum fits (today that reads "not computed").  (b) On the
+ring, where the bins are sound, the intervals with the statement are short
+at 25 to 100 bins (0.74–0.88 at the 90% level), so the report is also not
+calibrated at the larger error bars of few bins on line spectra.  Neither is
+fixed.  The 400-bin results of (xxvi) and (xxix) stand, and the dimer's 7 of
+7 at β = 8 should be read with its 1.34.
+
 **Gates for calling it shippable**, and where seed 1 stands (2026-11-25,
 after (xxiv)):
 (1) known-answer W₁ at or below MaxEnt on every family — *met on the ten
