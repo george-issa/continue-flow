@@ -190,6 +190,8 @@ The stated 50% and 90% intervals hold the exact weight this often:
 | exact line spectra that the report flags | 0.55 | 0.90 |
 | exact line spectra that the report does not flag | 0.32 | 0.62 |
 | the same, stated to be discrete | 0.68 | 0.95 |
+| bands of 16 to 256 random lines, β = 8 | 0.35 | 0.75 |
+| the same, stated to be discrete | 0.81 | 0.99 |
 
 Three real DQMC runs of exactly solvable clusters (SmoQyDQMC, U = 4, 400 bins):
 
@@ -206,11 +208,16 @@ full record of what was measured is [`docs/TRAINING.md`](docs/TRAINING.md).
 
 ## Known limits
 
-- **Many close lines that are not stated to be discrete.** The data look like
-  a continuous band, so the report cannot flag them. The intervals are too
-  narrow (0.32 / 0.62 instead of 0.50 / 0.90) and there is no warning. On the
-  four-site ring the exact weight is inside the 90% interval in 4 of 7 windows
-  without `--discrete` and in 7 of 7 with it.
+- **Spectra with many features that the data do not resolve.** A cluster, the
+  local spectrum of a small lattice, a disordered system. The data look like a
+  smooth band, the model was trained on smooth bands and on spectra of up to
+  12 poles, and the report cannot tell. The intervals are too narrow and there
+  is no warning. Measured on bands of 16 to 256 random lines at β = 8: the
+  50% and 90% intervals hold the exact weight 0.35 and 0.75 of the time. With
+  `--discrete` they hold it 0.81 and 0.99 of the time at four times the
+  width. On the four-site ring the exact weight is inside the 90% interval in
+  4 of 7 windows without `--discrete` and in 7 of 7 with it. The range allowed
+  by the data alone held in every case.
 - **A few sharp lines at β near 2 that are not stated to be discrete.** MaxEnt
   is about 1.1 times more accurate. With the statement the two are level.
 - **Lines too close for the data to separate.** One fitted line stands in for

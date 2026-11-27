@@ -184,6 +184,22 @@ Left: share of windows whose exact weight lies inside the stated intervals, with
 
 ![discrete_statement.png](3_error_bars/discrete_statement.png)
 
+**bands_of_many_lines.png**
+
+Where the intervals fail: bands of N lines at random positions under a semicircle, N from 4 to 512. For the data such a band is a continuous one with more structure than the model was trained on. The report flags only the smallest N, and from 16 to 256 lines at beta = 8 its intervals are too narrow with no warning.
+
+One row per setting. First two panels: share of windows whose exact weight lies inside the stated 50% and 90% intervals, at the defaults (blue) and with the spectrum stated to be discrete (green); dashes are nominal. Third: share of spectra the report flags. Fourth: the error.
+
+![bands_of_many_lines.png](3_error_bars/bands_of_many_lines.png)
+
+**bands_of_many_lines_smoothed_windows.png**
+
+The same bands at beta = 8, error bar 1e-3, with the samples scored on windows whose edges are smoothed over a width of up to pi/beta: is the failure the sharp edge of the windows? Only in part.
+
+Share of windows whose exact weight lies inside the 50% and 90% intervals of the samples, one curve per edge width. The last point is the exact lattice spectra, where the intervals hold at every width.
+
+![bands_of_many_lines_smoothed_windows.png](3_error_bars/bands_of_many_lines_smoothed_windows.png)
+
 ## 4_checks
 
 Checks behind the numbers. The seeds of the earlier recipe, the families left out and the line-spectrum headroom were made on the `F3_60k` trainings (the same recipe without exact line spectra as targets) and are not redrawn per model.
@@ -195,6 +211,14 @@ Known answers at the edges of the range the model was trained on: beta = 1 and 2
 Left: this model's error over MaxEnt's on the same data (below 1 = this model is better). Middle and right: share of windows whose exact weight lies inside the stated intervals; dashes are nominal. Made before zero-width lines were fitted: the line spectra at relative error bars of 1e-5 are better now (3_error_bars/zero_width_lines.png); everything else is unchanged.
 
 ![edges_of_trained_range.png](4_checks/edges_of_trained_range.png)
+
+**intervals_cut_to_the_possible_range.png**
+
+The stated intervals cut to the possible range (not below zero, not outside the range the data alone allow), recounted on the stored results of the judges.
+
+Grey: as the judges stored them. Blue: with the cut. Left and middle: share of windows whose exact weight lies inside the 50% and 90% intervals. Right: the mean width of the 90% interval. The figures above were made before the cut.
+
+![intervals_cut_to_the_possible_range.png](4_checks/intervals_cut_to_the_possible_range.png)
 
 **lines_whenever_they_fit_on_prior_draws.png**
 

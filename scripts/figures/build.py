@@ -93,6 +93,20 @@ COPIES = (
      "range the data alone allow. The last group is the cost of making the statement about a continuous "
      "spectrum. Made before zero-width lines were fitted: the line spectra the report does not flag, which "
      "this figure is about, are reported the same way now; the flagged ones are in zero_width_lines.png."),
+    ("3_error_bars", "bands_of_many_lines.png", ("out/step3/line_density_{m}/line_density.png",),
+     "Where the intervals fail: bands of N lines at random positions under a semicircle, N from 4 to 512. "
+     "For the data such a band is a continuous one with more structure than the model was trained on. The "
+     "report flags only the smallest N, and from 16 to 256 lines at beta = 8 its intervals are too narrow "
+     "with no warning.",
+     "One row per setting. First two panels: share of windows whose exact weight lies inside the stated 50% "
+     "and 90% intervals, at the defaults (blue) and with the spectrum stated to be discrete (green); dashes "
+     "are nominal. Third: share of spectra the report flags. Fourth: the error."),
+    ("3_error_bars", "bands_of_many_lines_smoothed_windows.png",
+     ("out/step3/line_density_soft_{m}/soft_windows.png",),
+     "The same bands at beta = 8, error bar 1e-3, with the samples scored on windows whose edges are smoothed "
+     "over a width of up to pi/beta: is the failure the sharp edge of the windows? Only in part.",
+     "Share of windows whose exact weight lies inside the 50% and 90% intervals of the samples, one curve per "
+     "edge width. The last point is the exact lattice spectra, where the intervals hold at every width."),
     ("4_checks", "edges_of_trained_range.png", ("out/step3/edges_{m}/edges.png",),
      "Known answers at the edges of the range the model was trained on: beta = 1 and 20, relative error bars "
      "of 1e-5, dtau = 0.02 and 0.5 (20 exact lattice and 24 exact line spectra per setting).",
@@ -100,6 +114,12 @@ COPIES = (
      "right: share of windows whose exact weight lies inside the stated intervals; dashes are nominal. Made "
      "before zero-width lines were fitted: the line spectra at relative error bars of 1e-5 are better now "
      "(3_error_bars/zero_width_lines.png); everything else is unchanged."),
+    ("4_checks", "intervals_cut_to_the_possible_range.png", ("out/step3/interval_cut_{m}/interval_cut.png",),
+     "The stated intervals cut to the possible range (not below zero, not outside the range the data alone "
+     "allow), recounted on the stored results of the judges.",
+     "Grey: as the judges stored them. Blue: with the cut. Left and middle: share of windows whose exact "
+     "weight lies inside the 50% and 90% intervals. Right: the mean width of the 90% interval. The figures "
+     "above were made before the cut."),
     ("4_checks", "lines_whenever_they_fit_on_prior_draws.png", ("out/step3/line_fit_always_{m}/prior_draws.png",),
      "Why zero-width lines are not fitted whenever they fit: held-out draws of the training prior that the "
      "report flags, by what they really are. Where the narrow features are lines the error falls; where "

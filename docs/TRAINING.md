@@ -1801,6 +1801,69 @@ on 321 slices 6 of 7, the miss by 0.001.
 *Also*: checkpoints are read with `weights_only=True` (all 24 checkpoints
 under `out/` load that way).
 
+(xxxiii) **Bands of many lines: the default intervals are too narrow up to
+about 250 lines, and the sharp window edges are only part of it**
+(*measured*, 2026-11-27; `scripts/step3/line_density_judge.py`,
+`run_line_density.sh`, `out/step3/line_density_F3L_60k_s1/`,
+`out/step3/line_density_soft_F3L_60k_s1/`).  The question left by (xxii) and
+(xxx): the report cannot flag many close lines, so how many lines does it
+take before it can treat them as a continuous band?  Truths: N lines at
+random positions under a semicircle of width 3 to 6, weights scattered around
+the envelope (gamma-distributed, relative spread 0.7), N from 4 to 512, 12
+spectra each, so that N → ∞ is a spectrum of the training prior.  Continued
+at the defaults and with `discrete=True`, 64 samples, three settings.
+*At β = 8* (error bars 1e-3 and 1e-4): the report flags narrow lines on
+50–75% of the spectra at N = 4, on 33–58% at N = 8 and on none from N = 16
+(1e-4: 8%).  From N = 16 to 256 the stated intervals hold the exact window
+weight 0.35 / 0.75 of the time (840 windows; 0.40 / 0.76 at 1e-3, 0.31 /
+0.73 at 1e-4), and they reach 0.57 / 0.90 and 0.44 / 0.86 only at N = 512
+(mean spacing 0.02 π/β).  Nothing in the report signals it: the samples fit
+(χ² 0.97, all accepted), they use 8 poles (lattice spectra use 10), and at
+1e-3 a warning is printed on 6 of 60 spectra.  The 90% intervals narrow from
+0.06 at N = 16 to 0.03 at N ≥ 128, the width they have on lattice spectra.
+With the statement: 0.81 / 0.99 at 4.1 times the width, so the statement is
+safe here and wider than needed.  The range the data alone allow held the
+exact weight in 1344 of 1344 windows.
+*At β = 2*: every spectrum is flagged at every N, 512 included, and the
+intervals are conservative (0.76 / 0.98 from N = 16).
+*Is it the sharp edge of the windows?*  Partly.  The stored samples of the
+β = 8, 1e-3 runs rescored on windows whose edges are smoothed over a width s
+(the weight in the sharp window of the spectrum broadened by a Lorentzian of
+half-width s): N = 16 to 256, sharp edge 0.32 / 0.76; s = 0.25 π/β 0.37 /
+0.86; s = π/β 0.45 / 0.88.  Lattice spectra on the same windows: 0.46 / 0.94
+sharp, 0.39 / 0.91 at π/β.  So smoothing the edges at the resolution brings
+the 90% level close and leaves the 50% level short.
+Reading: this is not a property of lines.  A band of 16 to 256 random lines
+is, for the data, a continuous band with more independent structure than
+anything the model was trained on (12 poles, smooth bands), and the
+posterior under that prior is too narrow for it.  The defect is wider than
+"the line spectra the report does not flag": it covers any spectrum with many
+features that the data do not resolve — the local spectrum of a small
+lattice, a cluster, a disordered system — and the report gives no sign.
+What holds in every case is the range the data alone allow, and, at 4 times
+the width, the intervals with the statement.  Not fixed.  The remedies are a
+decision about what the report states by default (the next entry on this is
+owed): the user's knowledge that the spectrum is smooth is information the
+data do not contain.
+
+(xxxiv) **Input formats: bins that stop at β − Δτ are read, malformed files
+are refused with the reason** (2026-11-27; `data/real.py`, `cli.py`,
+`tests/test_inputs.py`).  Six versions of the dimer bins were given to
+`spevae continue` as a user might have them.  Before: a file that stops at
+β − Δτ (the convention of many codes) was refused; a spin-summed G and a
+transposed file were refused with a message about the sign; a NaN crashed
+with a traceback; 8 bins gave a report that said "100% accepted" and "NO
+sample fits" at once.  Now: the missing endpoint is appended as
+G(β) = 1 − G(0) in every bin, which is exact for a fermionic single-particle
+G and is what SmoQyDQMC writes (the report on the shortened dimer file equals
+the report on the full file); the convention is decided from the data (the
+step to G(β) continues the curve, or the sum rule already holds), refused
+when neither, and can be stated with `--endpoint`; the three malformed files
+are refused with what is wrong.  The report on very few bins is not fixed
+yet (the bin-count judge on the DQMC runs is running).  Not done: a warning
+for correlated bins (`autocorrelation_report` exists and the report does not
+call it).
+
 **Gates for calling it shippable**, and where seed 1 stands (2026-11-25,
 after (xxiv)):
 (1) known-answer W₁ at or below MaxEnt on every family — *met on the ten
