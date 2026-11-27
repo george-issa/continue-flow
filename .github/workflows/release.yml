@@ -1,0 +1,39 @@
+name: release
+
+# A tag vX.Y.Z builds the package and opens a GitHub release with it.
+# The notes are the section of CHANGELOG.md for that version.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: The tag matches the package version
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/spevae/__init__.py)
+          test "v$version" = "$GITHUB_REF_NAME"
+      - name: Build
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+      - name: Notes from the changelog
+        run: |
+          awk -v v="${GITHUB_REF_NAME#v}" '
+            /^## / { on = ($2 == v) ; next }
+            on { print }' CHANGELOG.md > notes.md
+          test -s notes.md
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --notes-file notes.md
