@@ -1,5 +1,7 @@
 # continue-flow
 
+[![tests](https://github.com/george-issa/continue-flow/actions/workflows/tests.yml/badge.svg)](https://github.com/george-issa/continue-flow/actions/workflows/tests.yml)
+
 Analytic continuation of imaginary-time Green's functions G(τ) from quantum
 Monte Carlo to real-frequency spectral functions A(ω). The result is a set of
 spectra that fit the data, reported with intervals on the spectral weight that
