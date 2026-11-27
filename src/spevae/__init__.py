@@ -1,12 +1,18 @@
 """spevae -- analytic continuation of imaginary-time Green's functions.
 
-A physics-constrained variational autoencoder that maps a noisy DQMC
-:math:`G(\\tau)` to a real-frequency spectral function :math:`A(\\omega)`
-represented as a simple pole expansion -- causal, normalised, positive, and
-free of any frequency grid by construction.
+Maps a noisy DQMC :math:`G(\\tau)` to real-frequency spectral functions
+:math:`A(\\omega)` written as sums of poles, with no frequency grid.
 
-See :mod:`spevae.physics` for the exact forward map and the constraint algebra,
-and ``docs/DESIGN.md`` for the design rationale and literature context.
+Two models share the encoder and the pole representation:
+
+* the flow model (:mod:`spevae.models.flow`) with its posterior report
+  (:mod:`spevae.posterior`): many spectra that fit the data, with intervals
+  on the spectral weight;
+* the earlier variational autoencoder (:mod:`spevae.models.vae`): one pole
+  set per input.
+
+See :mod:`spevae.physics` for the forward map and the constraint algebra, and
+``docs/DESIGN.md`` for the design and the literature.
 """
 
 __version__ = "0.1.0"

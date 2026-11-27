@@ -37,6 +37,8 @@ import sys
 import numpy as np
 import torch
 
+from . import __version__
+
 
 def _load_measured(args, need_bins: bool = True):
     """Shared --bins/--beta handling with the sum-rule gate."""
@@ -71,7 +73,7 @@ def _add_bins_args(ap: argparse.ArgumentParser) -> None:
 
 
 def _is_flow_checkpoint(path: str) -> bool:
-    ck = torch.load(path, map_location="cpu", weights_only=False)
+    ck = torch.load(path, map_location="cpu", weights_only=True)
     return isinstance(ck, dict) and ck.get("format") == "flow-1"
 
 
@@ -514,7 +516,8 @@ def main(argv=None) -> None:
     ap = argparse.ArgumentParser(
         prog="spevae",
         description="Analytic continuation of imaginary-time Green's functions "
-                    "via a physics-constrained pole-expansion VAE.")
+                    "to spectral functions written as a sum of poles.")
+    ap.add_argument("--version", action="version", version=f"spevae {__version__}")
     sub = ap.add_subparsers(dest="command", required=True)
 
     c = sub.add_parser("continue", help="continue G(tau) bins to A(omega)",

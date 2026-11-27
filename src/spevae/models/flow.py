@@ -753,7 +753,7 @@ def save_flow(model: FlowPosterior, path: str, **meta) -> str:
 
 
 def load_flow(path: str, map_location="cpu") -> FlowPosterior:
-    ck = torch.load(path, map_location=map_location, weights_only=False)
+    ck = torch.load(path, map_location=map_location, weights_only=True)
     if ck.get("format") != "flow-1":
         raise ValueError(f"{path} is not a flow-posterior checkpoint")
     m = FlowPosterior(**ck["config"])

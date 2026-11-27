@@ -114,7 +114,7 @@ def save_count(model: CountPosterior, path: str, **meta) -> str:
 
 
 def load_count(path: str, map_location="cpu") -> CountPosterior:
-    ck = torch.load(path, map_location=map_location, weights_only=False)
+    ck = torch.load(path, map_location=map_location, weights_only=True)
     if ck.get("format") != "count-1":
         raise ValueError(f"{path} is not a count-posterior checkpoint")
     m = CountPosterior(**ck["config"])

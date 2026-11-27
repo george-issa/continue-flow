@@ -52,8 +52,12 @@ def save_model(model: SPEVAE, path: str, **meta: Any) -> str:
 
 
 def load_checkpoint(path: str, map_location="cpu") -> dict:
-    """Read a checkpoint without instantiating anything."""
-    return torch.load(path, map_location=map_location, weights_only=False)
+    """Read a checkpoint without instantiating anything.
+
+    Checkpoints hold tensors, numbers and strings only, so they are read with
+    ``weights_only=True``: a downloaded file cannot run code on load.
+    """
+    return torch.load(path, map_location=map_location, weights_only=True)
 
 
 def load_model(
