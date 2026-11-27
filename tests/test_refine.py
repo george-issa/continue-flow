@@ -242,6 +242,8 @@ def test_z_descend_beats_the_mean_readout():
     from spevae.refine import z_descend
     from spevae.physics.poles import PoleSet
     from spevae.physics.forward import SpectralQuadrature, PoleGreens
+    if not os.path.exists("out/step1/s1_metric.pt"):
+        pytest.skip("reference checkpoint not present")
     model = load_model("out/step1/s1_metric.pt")
     beta = 8.0
     truth = PoleSet(eps=torch.tensor([[0.5, 1.5, 2.5]]) * beta,
@@ -313,6 +315,8 @@ def test_manifold_refit_dial_behaves():
     from spevae.refine import z_descend, manifold_refit
     from spevae.physics.poles import PoleSet
     from spevae.physics.forward import SpectralQuadrature, PoleGreens
+    if not os.path.exists("out/step1/s1_metric.pt"):
+        pytest.skip("reference checkpoint not present")
     model = load_model("out/step1/s1_metric.pt")
     beta = 8.0
     truth = PoleSet(eps=torch.tensor([[0.4, 1.1, 2.6]]) * beta,
