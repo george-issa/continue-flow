@@ -163,10 +163,36 @@ warning.
 
 ## Tests against exact answers
 
+### Basic spectra
+
+Lorentzians, Gaussians and pole sets with complex residues, with positions,
+widths and weights drawn at random (10 spectra each). The error here is the
+mean error of the weight in a frequency window, for this model / MaxEnt on the
+same data. The last column is how often the stated 50% and 90% intervals hold
+the exact weight, over four settings.
+
+| spectrum | β = 8, error bar 1e-3 | β = 8, error bar 1e-4 | intervals hold |
+|---|---|---|---|
+| 1 Lorentzian | 0.0034 / 0.0080 | 0.0015 / 0.0073 | 0.64 / 0.98 |
+| 2 Lorentzians | 0.0044 / 0.0138 | 0.0015 / 0.0091 | 0.63 / 0.99 |
+| 3 Lorentzians | 0.0082 / 0.0130 | 0.0028 / 0.0088 | 0.62 / 0.95 |
+| 1 Gaussian | 0.0130 / 0.0119 | 0.0079 / 0.0025 | 0.72 / 0.97 |
+| 2 Gaussians | 0.0095 / 0.0113 | 0.0049 / 0.0031 | 0.68 / 0.99 |
+| 3 Gaussians | 0.0109 / 0.0126 | 0.0055 / 0.0062 | 0.60 / 0.95 |
+| pole set, 3 to 8 poles | 0.0075 / 0.0107 | 0.0040 / 0.0072 | 0.60 / 0.96 |
+
+### Lattice and line spectra
+
 The error is the area between the reconstructed and the exact cumulative
 spectral weight (W₁, in units of ω; lower is better). MaxEnt is run on the same
-data. Lattice spectra are continuous (tight-binding bands, BCS, Falicov–Kimball
-and others); line spectra are exactly diagonalised atoms and clusters.
+data, with a flat default model. Lattice spectra are continuous (tight-binding
+bands, BCS, Falicov–Kimball and others); line spectra are exactly diagonalised
+atoms and clusters.
+
+W₁ counts weight by how far it is misplaced, so it is sensitive to tails, which
+the pole model has built in and MaxEnt does not. On the window-weight error of
+the table above, this model has about half of MaxEnt's error on lattice spectra
+at β = 8 and 16, and 0.8 of it at β = 2.
 
 | setting | lattice: this model / MaxEnt | lower on | lines: this model / MaxEnt | lower on |
 |---|---|---|---|---|
@@ -218,6 +244,11 @@ full record of what was measured is [`docs/TRAINING.md`](docs/TRAINING.md).
   width. On the four-site ring the exact weight is inside the 90% interval in
   4 of 7 windows without `--discrete` and in 7 of 7 with it. The range allowed
   by the data alone held in every case.
+- **Gaussian peaks at small error bars.** On a single Gaussian at relative
+  error bars of 1e-4, MaxEnt is 2 to 3 times more accurate. At 1e-3 the two
+  are level. The intervals hold in both cases. A Gaussian can also draw the
+  warning about narrow lines, which is wrong for it: the fit uses its narrowest
+  poles to make the core of the Gaussian.
 - **A few sharp lines at β near 2 that are not stated to be discrete.** MaxEnt
   is about 1.1 times more accurate. With the statement the two are level.
 - **Lines too close for the data to separate.** One fitted line stands in for

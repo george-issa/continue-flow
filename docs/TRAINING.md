@@ -1909,6 +1909,58 @@ calibrated at the larger error bars of few bins on line spectra.  Neither is
 fixed.  The 400-bin results of (xxvi) and (xxix) stand, and the dimer's 7 of
 7 at β = 8 should be read with its 1.34.
 
+(xxxvi) **The basic spectra through the report: Lorentzians, Gaussians and
+pole sets; and the comparison with MaxEnt on a measure that does not count
+tails** (*measured*, 2026-11-27; `scripts/step3/basic_spectra_judge.py`,
+`run_basic_spectra.sh`, `out/step3/basic_spectra_F3L_60k_s1/`).  One, two
+and three Lorentzians (half-widths 0.2 to 1), one, two and three Gaussians
+(σ 0.25 to 1), and pole sets of 3 to 8 poles with complex residues;
+positions, widths and weights at random, 10 spectra per family, four
+settings (β = 8 at error bars 1e-3 and 1e-4, β = 2 and 16 at 1e-3), 64
+samples, the report at its defaults, MaxEnt on the same data, exact window
+weights in closed form.
+*Two measures.*  The cumulative-weight error W₁ counts weight by how far it
+is misplaced and is dominated by tails.  The pole model has the tail of a
+Lorentzian built in; MaxEnt with a flat default model on |ω| ≤ 15 does not,
+and scores about 0.5 on every Lorentzian whatever its peak looks like.  The
+second measure is the mean error of the weight in the seven windows (this
+model: the mean over its samples).
+*Lorentzians*: W₁ 0.005–0.13 against MaxEnt's 0.48–0.57, lower on 120 of
+120.  Window weights: 0.0015–0.0185 against 0.0073–0.0246, a factor 1.2 to 6
+(β = 8, 1e-3: 0.0034 / 0.0080, 0.0044 / 0.0138, 0.0082 / 0.0130 for one, two
+and three).
+*Pole sets*: W₁ 0.03–0.12 against 0.39–0.49, lower on 39 of 40; window
+weights 0.0040–0.0142 against 0.0072–0.0186, a factor 1.3 to 1.8.
+*Gaussians*: at error bars of 1e-3 level with MaxEnt or better (β = 8: W₁
+ratio 0.83 [0.61, 1.14], 0.97 [0.66, 1.44], 0.60 [0.45, 0.80] for one, two
+and three; β = 16: 0.49, 0.64, 0.38; β = 2: 0.91, 1.07, 0.98; window weights
+within 25% of MaxEnt's either way at β = 8 and 2, and 24–42% lower at
+β = 16).  At 1e-4, β = 8: MaxEnt is the more
+accurate on a single Gaussian by 2.35 [1.88, 2.93] in W₁ and 3 in window
+weights (0.0079 against 0.0025), on 10 of 10; on two Gaussians by 1.65
+[0.96, 2.81]; three are level.  A Gaussian has no tail, and the model builds
+it from poles that have.
+*A Gaussian read as lines*: the report flags narrow lines on a single
+Gaussian in 5 of 10 at β = 8 (both error bars), 4 of 10 at β = 16 and 10 of
+10 at β = 2 (two Gaussians at β = 2: 10 of 10), and prints that the data
+favour lines narrower than the model was trained on.  The fit uses its
+narrowest poles to make the Gaussian's core; the warning is wrong about the
+spectrum.
+*Intervals*: over all 1960 windows the stated intervals hold the exact
+weight 0.64 / 0.97 of the time (Lorentzians 0.63 / 0.98, Gaussians 0.67 /
+0.97, pole sets 0.60 / 0.96; lowest single family 0.87 at the 90% level,
+three Lorentzians at β = 2).  Conservative, never short.
+*The known-answer judge on the second measure* (the spectra of (xxvi),
+MaxEnt recomputed; `known_answers_window_error.json`): lattice spectra,
+window-weight error of this model over MaxEnt's 0.47, 0.46, 0.53 at β = 8
+(1e-3, 1e-4, 1e-2), 0.55 at β = 16 and 0.80 at β = 2 (W₁: 0.39, 0.24, 0.54,
+0.52, 0.30), lower on 16, 18, 15, 14 and 11 of 20.  Line spectra: 0.54,
+1.26, 0.49, 0.38 and 1.31 (W₁: 0.76, 0.95, 0.76, 0.59, 1.11).  So on lattice
+spectra the model has about half of MaxEnt's error at β = 8 and 16 on either
+measure, and at β = 2 the factor 3 in W₁ is mostly tails: on window weights
+it is 1.25, lower on 11 of 20.  The W₁ ratios quoted in (xix)–(xxxi) should
+be read with this.
+
 **Gates for calling it shippable**, and where seed 1 stands (2026-11-25,
 after (xxiv)):
 (1) known-answer W₁ at or below MaxEnt on every family — *met on the ten
