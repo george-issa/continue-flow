@@ -88,6 +88,22 @@ The line spectra again with the spectrum stated to be discrete (`--discrete`), w
 
 ![lines_stated_discrete_beta16_errorbar0.001.png](1_known_answers/lines_stated_discrete_beta16_errorbar0.001.png)
 
+**basic_spectra.png**
+
+The basic spectra: one to three Lorentzians, one to three Gaussians, and pole sets with complex residues, drawn at random (10 each per setting), through the report and through MaxEnt.
+
+One row per setting. Left: the cumulative-weight error over MaxEnt's, one point per spectrum, with the mean and its 95% interval; this measure is dominated by tails. Middle: the mean error of the weight in a frequency window, this model and MaxEnt. Right: share of windows whose exact weight lies inside the stated 50% and 90% intervals; dashes are nominal.
+
+![basic_spectra.png](1_known_answers/basic_spectra.png)
+
+**basic_spectra_examples.png**
+
+Two examples of each basic spectrum at beta = 8, relative error bar 1e-3.
+
+Blue: posterior median and 90% band. Grey: MaxEnt. Dashed: exact. A red title marks a spectrum where MaxEnt has the lower cumulative-weight error.
+
+![basic_spectra_examples.png](1_known_answers/basic_spectra_examples.png)
+
 ## 2_real_data
 
 Real DQMC data.

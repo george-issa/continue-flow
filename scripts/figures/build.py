@@ -26,6 +26,18 @@ SETTINGS = ((8, 0.001), (8, 0.0001), (8, 0.01), (2, 0.001), (16, 0.001))
 
 # (folder, file name, candidate sources in order, what it shows, how to read it)
 COPIES = (
+    ("1_known_answers", "basic_spectra.png", ("out/step3/basic_spectra_{m}/basic_spectra.png",),
+     "The basic spectra: one to three Lorentzians, one to three Gaussians, and pole sets with complex "
+     "residues, drawn at random (10 each per setting), through the report and through MaxEnt.",
+     "One row per setting. Left: the cumulative-weight error over MaxEnt's, one point per spectrum, with the "
+     "mean and its 95% interval; this measure is dominated by tails. Middle: the mean error of the weight in "
+     "a frequency window, this model and MaxEnt. Right: share of windows whose exact weight lies inside the "
+     "stated 50% and 90% intervals; dashes are nominal."),
+    ("1_known_answers", "basic_spectra_examples.png",
+     ("out/step3/basic_spectra_{m}/basic_gallery_b8_n0.001.png",),
+     "Two examples of each basic spectrum at beta = 8, relative error bar 1e-3.",
+     "Blue: posterior median and 90% band. Grey: MaxEnt. Dashed: exact. A red title marks a spectrum where "
+     "MaxEnt has the lower cumulative-weight error."),
     ("2_real_data", "hubbard_dimer_dqmc.png",
      ("out/dqmc/{m}/dimer_judge.png", "F3_60k_s1=out/dqmc/F3_60k_s1_floor_auto/dimer_judge.png"),
      "Real DQMC bins of the half-filled Hubbard dimer (U = 4, beta = 8, 400 bins), whose spectrum is known "
@@ -93,18 +105,6 @@ COPIES = (
      "range the data alone allow. The last group is the cost of making the statement about a continuous "
      "spectrum. Made before zero-width lines were fitted: the line spectra the report does not flag, which "
      "this figure is about, are reported the same way now; the flagged ones are in zero_width_lines.png."),
-    ("1_known_answers", "basic_spectra.png", ("out/step3/basic_spectra_{m}/basic_spectra.png",),
-     "The basic spectra: one to three Lorentzians, one to three Gaussians, and pole sets with complex "
-     "residues, drawn at random (10 each per setting), through the report and through MaxEnt.",
-     "One row per setting. Left: the cumulative-weight error over MaxEnt's, one point per spectrum, with the "
-     "mean and its 95% interval; this measure is dominated by tails. Middle: the mean error of the weight in "
-     "a frequency window, this model and MaxEnt. Right: share of windows whose exact weight lies inside the "
-     "stated 50% and 90% intervals; dashes are nominal."),
-    ("1_known_answers", "basic_spectra_examples.png",
-     ("out/step3/basic_spectra_{m}/basic_gallery_b8_n0.001.png",),
-     "Two examples of each basic spectrum at beta = 8, relative error bar 1e-3.",
-     "Blue: posterior median and 90% band. Grey: MaxEnt. Dashed: exact. A red title marks a spectrum where "
-     "MaxEnt has the lower cumulative-weight error."),
     ("2_real_data", "dqmc_few_bins.png", ("out/dqmc/bin_count_{m}/bin_count.png",),
      "The three DQMC runs with known answers, continued from subsets of 25 to 200 of their 400 bins. At "
      "beta = 8 the intervals fail on the subsets. On the dimer the cause is in the bins: rare bins carry "
@@ -237,7 +237,7 @@ def main():
              "4_checks": "Checks behind the numbers. The seeds of the earlier recipe, the families left out and "
                          "the line-spectrum headroom were made on the `F3_60k` trainings (the same recipe "
                          "without exact line spectra as targets) and are not redrawn per model."}
-    done = set()
+    done = {"1_known_answers"}                      # its section is open: these follow the galleries
     for folder, name, cands, what, how in COPIES:
         if folder not in done:
             lines += [f"## {folder}", "", heads[folder], ""]
