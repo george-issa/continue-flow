@@ -260,7 +260,8 @@ class MeasuredGreens:
             f"{'endpoint-inclusive' if self.includes_endpoints else 'tau < beta'}\n"
             f"  bins      : {self.n_bins}\n"
             f"  G(0)      : {float(self.mean[0]):.6f} +- {float(self.sigma[0]):.2e}\n"
-            f"  G(beta)   : {float(self.mean[-1]):.6f} +- {float(self.sigma[-1]):.2e}\n"
+            f"  G(beta)   : {float(self.mean[-1]):.6f} +- {float(self.sigma[-1]):.2e}"
+            f"{'   (appended as 1 - G(0): the bins stop at beta - dtau)' if self.meta.get('endpoint_appended') else ''}\n"
             f"  sum rule  : G(0)+G(beta) = {sr['norm']:.6f} "
             f"({'ok' if sr['ok'] else 'CHECK CONVENTION'})\n"
             f"  noise     : sigma(beta/2) = {float(self.sigma[self.n_tau//2]):.2e} "
@@ -282,6 +283,7 @@ def from_bins(
     includes_endpoints: bool | None = None,
     reference=None,
     dtype: torch.dtype = torch.float32,
+    endpoint: str = "auto",
 ) -> MeasuredGreens:
     r"""Build a :class:`MeasuredGreens` from raw bins -- the universal entry point.
 
@@ -308,20 +310,36 @@ def from_bins(
         endpoint-inclusive uniform grid has :math:`\Delta\tau = \beta/(L-1)`,
         and the two conventions are distinguished by which choice makes
         :math:`G(0)+G(\beta)` come out at 1.
+    endpoint
+        What to do about :math:`\tau = \beta` when neither ``tau`` nor
+        ``includes_endpoints`` is given.  Many codes write
+        :math:`\tau = 0 \dots \beta - \Delta\tau`.  For a fermionic
+        single-particle :math:`G` the missing value is known exactly,
+        :math:`G(\beta) = 1 - G(0)` in every bin, and with ``"missing"`` it is
+        appended as a last column (``meta["endpoint_appended"]``).
+        ``"included"`` takes the last column as :math:`\tau = \beta`.
+        ``"auto"`` (default) decides from the data, see
+        :func:`endpoint_convention`, and raises when they fit neither reading.
     """
     b = torch.as_tensor(np.asarray(bins), dtype=dtype)
+    if b.ndim == 2 and not bool(torch.isfinite(b).all()):
+        bad = (~torch.isfinite(b)).nonzero()
+        raise ValueError(f"the bins hold {len(bad)} values that are not finite numbers (the first "
+                         f"in bin {int(bad[0, 0])}, time slice {int(bad[0, 1])})")
     if sign_flip is None:
         norm = float((b[:, 0] + b[:, -1]).mean())
         sign_flip = abs(-norm - 1.0) < abs(norm - 1.0)
     if sign_flip:
         b = -b
 
+    appended = False
     if includes_endpoints is None and tau is None:
-        inc = float((b[:, 0] + b[:, -1]).mean())
-        # Under the exclusive convention the last slice is beta - dtau, whose
-        # value is close to but not equal to G(beta); the inclusive reading is
-        # the one that lands on 1.
-        includes_endpoints = abs(inc - 1.0) < 0.05
+        if endpoint not in ("auto", "included", "missing"):
+            raise ValueError(f"endpoint must be 'auto', 'included' or 'missing', not {endpoint!r}")
+        if (endpoint_convention(b) if endpoint == "auto" else endpoint) == "missing":
+            b = torch.cat([b, 1.0 - b[:, :1]], dim=1)          # G(beta) = 1 - G(0), bin by bin
+            appended = True
+        includes_endpoints = True
     elif includes_endpoints is None:
         includes_endpoints = True
 
@@ -341,7 +359,56 @@ def from_bins(
                         includes_endpoints=bool(includes_endpoints),
                         reference=reference)
     mg.meta["sign_flip"] = bool(sign_flip)
+    mg.meta["endpoint_appended"] = appended
     return mg
+
+
+def endpoint_convention(bins: torch.Tensor) -> str:
+    r"""Does the last column of the bins sit at :math:`\tau = \beta` or one step before it?
+
+    Returns ``"included"`` or ``"missing"``; raises ``ValueError`` when the
+    data fit neither.  The bins are in the positive convention.
+
+    If the grid stops at :math:`\beta - \Delta\tau`, the value
+    :math:`G(\beta) = 1 - G(0)` lies one step beyond the last column, and that
+    step continues the curve: it has the sign of the step before it and between
+    half and four times its size (:math:`G` is a sum of exponentials, so its
+    steps change by a factor :math:`e^{\pm\omega\Delta\tau}` from one to the
+    next).  If the grid ends at :math:`\beta`, the sum rule already holds and
+    the step is zero.  Anything else is not a fermionic single-particle
+    :math:`G` with unit norm on a uniform grid (a spin-summed :math:`G`,
+    another correlator, a transposed file), or the grid is too coarse to tell,
+    and guessing would give a confident, wrong spectrum.
+
+    Data that are flat near :math:`\beta` within their noise satisfy both
+    readings and are read as ``"included"``; state the convention for those.
+    """
+    b = bins.double()
+    n, L = b.shape
+    if L < 3:
+        return "included"
+    step = 1.0 - b[:, 0] - b[:, -1]                         # to G(beta) = 1 - G(0) from the last column
+    last = b[:, -1] - b[:, -2]                              # the step before it
+    err = 4.0 * float(step.std(unbiased=True)) / math.sqrt(n) + 1e-9
+    step_m, last_m = float(step.mean()), float(last.mean())
+    if abs(step_m) <= max(err, 0.25 * abs(last_m)):
+        return "included"
+    if last_m != 0.0 and 0.5 <= step_m / last_m <= 4.0:
+        return "missing"
+    norm = 1.0 - step_m
+    hint = ""
+    if abs(norm - 2.0) < 0.05:
+        hint = " G(0) + G(beta) = 2 is what a spin-summed G gives: divide the bins by 2."
+    elif float(b.std(0).mean()) > float(b.std(1).mean()):
+        # rows that differ from one another more than a row varies along itself: rows are time slices
+        hint = (f" The {n} rows differ from one another more than each varies along its {L} columns: "
+                "one row per bin is expected, so the file may be transposed.")
+    raise ValueError(
+        f"G(0) + G(last column) = {norm:.6f}. The data fit neither a grid that ends at beta (the sum "
+        f"would be 1) nor one that stops at beta - dtau (then 1 - G(0) = {1.0 - float(b[:, 0].mean()):.6f} "
+        f"would continue the curve one step beyond the last column, {float(b[:, -1].mean()):.6f})."
+        + hint + " Guessing would give a confident, wrong spectrum. If the grid is known, state it: "
+        "--endpoint included or --endpoint missing (endpoint= in Python).")
 
 
 def read_text_bins(path: str, beta: float, sign_flip: bool | None = None,

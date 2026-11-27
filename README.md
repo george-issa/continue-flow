@@ -76,9 +76,11 @@ spevae continue --bins mybins.txt --beta 8.0 --checkpoint flow.pt \
 ```
 
 `--bins` is a whitespace-delimited text file with one row per bin and one
-column per time slice, τ = 0 … β inclusive. The sign convention is detected
-from the sum rule G(0) + G(β) = 1, and the run stops if neither sign satisfies
-it.
+column per time slice, τ = 0 … β. A file that stops at β − Δτ is read too:
+G(β) = 1 − G(0) is appended in every bin, and the printed summary says so. The
+sign convention is detected from the sum rule G(0) + G(β) = 1. The run stops
+with the reason if the data fit no convention: a spin-summed G, a transposed
+file, a value that is not a number.
 
 The output on real DQMC bins of the half-filled Hubbard dimer (U = 4, β = 8,
 400 bins, the file in `src/spevae/evaluation/fixtures/`):

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Bins that stop at β − Δτ are read: G(β) = 1 − G(0) is appended
+  (`--endpoint`, decided from the data by default).
+- A spin-summed G, a transposed file and values that are not numbers are
+  refused with the reason.
+
 ## 0.1.0
 
 First tagged version.

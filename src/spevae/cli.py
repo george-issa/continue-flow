@@ -46,15 +46,18 @@ def _load_measured(args, need_bins: bool = True):
 
     if args.beta is None:
         sys.exit("--bins requires --beta")
-    mg = read_text_bins(args.bins, args.beta, sign_flip=args.sign_flip,
-                        dtype=torch.float64)
+    try:
+        mg = read_text_bins(args.bins, args.beta, sign_flip=args.sign_flip,
+                            dtype=torch.float64, endpoint=getattr(args, "endpoint", "auto"))
+    except ValueError as e:
+        sys.exit(f"{args.bins}: {e}\nRefusing to continue.")
     print(mg.summary(getattr(args, "min_eigenvalue", 0.0)))
     print()
     sr = mg.check_sum_rule()
     if not sr["ok"]:
         sys.exit(f"G(0)+G(beta) = {sr['norm']:.6f}, expected 1. "
-                 f"Try --sign-flip, or check that tau runs 0 ... beta "
-                 f"inclusive. Refusing to continue: a wrong convention "
+                 f"Try --sign-flip, or state the time grid with --endpoint. "
+                 f"Refusing to continue: a wrong convention "
                  f"produces a confident, wrong spectrum.")
     return mg
 
@@ -62,7 +65,7 @@ def _load_measured(args, need_bins: bool = True):
 def _add_bins_args(ap: argparse.ArgumentParser) -> None:
     ap.add_argument("--bins", required=True, metavar="FILE",
                     help="whitespace-delimited (N_bins x L_tau) text file, "
-                         "tau = 0 ... beta inclusive")
+                         "tau = 0 ... beta, or 0 ... beta - dtau (see --endpoint)")
     ap.add_argument("--beta", type=float, required=True,
                     help="inverse temperature of the simulation")
     ap.add_argument("--sign-flip", dest="sign_flip", action="store_true",
@@ -70,6 +73,10 @@ def _add_bins_args(ap: argparse.ArgumentParser) -> None:
                     help="force G -> -G (default: detect from the sum rule)")
     ap.add_argument("--no-sign-flip", dest="sign_flip", action="store_false",
                     help="force no negation")
+    ap.add_argument("--endpoint", choices=("auto", "included", "missing"), default="auto",
+                    help="whether the last column is tau = beta ('included') or beta - dtau "
+                         "('missing': G(beta) = 1 - G(0) is appended). Default: decided from "
+                         "the data, and the run stops if they fit neither")
 
 
 def _is_flow_checkpoint(path: str) -> bool:
