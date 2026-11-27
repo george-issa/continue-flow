@@ -1,5 +1,8 @@
 # Tutorial: continuing a real DQMC dataset, end to end
 
+This tutorial uses the VAE model ([`VAE.md`](VAE.md)). For the flow model and
+its posterior report, see the Usage section of the README.
+
 This walks the full pipeline on a real half-filled Hubbard simulation
 (SmoQyDQMC, U = 6, β = 10, 4×4 lattice, 800 bins) exactly as run during
 validation of this package. Every number below is a measured output, not an
