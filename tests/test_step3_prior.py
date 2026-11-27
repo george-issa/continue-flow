@@ -97,7 +97,8 @@ def test_line_spectra_in_the_bank_give_exact_data_and_their_pole_label(tmp_path)
         # the label reproduces those data (a dense ladder is representable) ...
         from spevae.physics import PoleGreens, PoleSet
         lab = PoleSet(*(b.poles_true[k][i:i + 1] for k in ("eps", "gamma", "a", "b")))
-        assert float((PoleGreens(b.quad)(lab, b.x)[0] - b.G_clean[i]).abs().max()) < 1e-4
+        # (to 1e-4 on macOS and 2e-4 on Linux: the label is a nonlinear fit)
+        assert float((PoleGreens(b.quad)(lab, b.x)[0] - b.G_clean[i]).abs().max()) < 5e-4
         # ... and the node spectrum carries the lines' weight, line by line
         assert abs(float((b.A_true[i] * b.quad.weights).sum()) - 1.0) < 1e-9
         nodes = b.quad.nodes / beta

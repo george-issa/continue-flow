@@ -86,7 +86,7 @@ def test_kernel_endpoint_identities():
     assert torch.allclose(k0, torch.sigmoid(nu), atol=1e-16, rtol=1e-15)
     assert torch.allclose(k1, torch.sigmoid(-nu), atol=1e-16, rtol=1e-15)
     # The identity behind the sum rule G(0) + G(beta) = int A.
-    assert torch.max((k0 + k1 - 1.0).abs()) < 1e-16
+    assert torch.max((k0 + k1 - 1.0).abs()) < 4e-16           # round-off: one or two ulps of 1
 
 
 def test_kernel_no_overflow_and_symmetry():
