@@ -17,3 +17,7 @@ __pycache__/
 # Holstein judge cell (400 bins and its reference spectrum)
 !src/spevae/evaluation/fixtures/hubbard_dimer_U4_b8.npz
 !src/spevae/evaluation/fixtures/holstein_b8_w1_n1_l0325.npz
+
+# build output
+/build/
+/dist/

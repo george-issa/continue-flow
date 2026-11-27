@@ -4,17 +4,31 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spevae"
-version = "0.1.0"
-description = "Physics-constrained VAE for analytic continuation of imaginary-time Green's functions via a simple pole expansion."
+dynamic = ["version"]
+description = "Analytic continuation of imaginary-time Green's functions from quantum Monte Carlo to spectral functions, with tested error bars."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
+authors = [{ name = "George Issa" }]
+keywords = ["analytic continuation", "quantum Monte Carlo", "spectral function", "Green's function", "condensed matter"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Physics",
+]
 dependencies = [
-    "numpy>=1.24",
+    "numpy>=2.0",
     "scipy>=1.10",
     "torch>=2.1",
     "h5py",
 ]
+
+[project.urls]
+Repository = "https://github.com/george-issa/continue-flow"
+Issues = "https://github.com/george-issa/continue-flow/issues"
+Changelog = "https://github.com/george-issa/continue-flow/blob/main/CHANGELOG.md"
 
 [project.scripts]
 spevae = "spevae.cli:main"
@@ -26,12 +40,17 @@ dev = ["pytest", "pytest-xdist", "matplotlib"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.dynamic]
+version = { attr = "spevae.__version__" }
+
 [tool.setuptools.package-data]
 # The maximum-entropy comparator is vendored (ana_cont is not on PyPI) and the
 # SmoQyDEAC comparator is driven by a Julia script; both must ship with the
 # package or the benchmark harness silently loses a baseline after `pip install`.
 "spevae._vendor.ana_cont" = ["LICENSE", "VENDORED.md"]
 "spevae.benchmark" = ["*.jl"]
+# the two small DQMC data files the tests and the examples read
+"spevae.evaluation" = ["fixtures/*.npz"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
