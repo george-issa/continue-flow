@@ -3,8 +3,9 @@
     python scripts/step3/leave_out_bank.py out/step3/bank/label_bank_trusted.pt \
         out/step3/bank_leave_out tb_honeycomb bcs ...
 
-Writes <out>/label_bank_trusted.pt and its .nodes.pt sidecar (the truths'
-exact spectra on the quadrature nodes, re-indexed), and prints what is left.
+Writes <out>/label_bank_trusted.pt and its sidecars, re-indexed (.nodes.pt:
+the truths' exact spectra on the quadrature nodes; .lines.pt: the exact line
+spectra, when the bank has them), and prints what is left.
 """
 import collections
 import sys
@@ -41,6 +42,10 @@ def main():
         nn[beta] = {"index": {j: n for n, (j, _) in enumerate(pairs)},
                     "A": pre["A"][torch.tensor([k for _, k in pairs])].clone()}
     torch.save(nn, str(out / "label_bank_trusted.pt") + ".nodes.pt")
+    if Path(src + ".lines.pt").exists():                  # exact line spectra, keyed by bank index
+        lines = torch.load(src + ".lines.pt", weights_only=False)
+        torch.save({new_of[j]: v for j, v in lines.items() if j in new_of},
+                   str(out / "label_bank_trusted.pt") + ".lines.pt")
     print(f"kept {len(keep)} of {len(fam)} labels; left out {sorted(drop)}")
     print(dict(collections.Counter(nb["family"])))
 
