@@ -105,6 +105,28 @@ def test_small_error_bars_draw_the_systematics_warning_unless_a_floor_is_set():
     assert rep.diagnostics["sigma_floor"] == 1e-3 and rep.diagnostics["relative_error_bar"] < 1e-4
 
 
+def test_a_time_grid_outside_the_trained_range_draws_a_warning():
+    path = "out/flow/F_60k.pt"
+    if not os.path.exists(path):
+        pytest.skip("reference flow checkpoint not present")
+    from spevae.models.flow import load_flow
+    flow = load_flow(path).eval()
+    inst = C.draw(C.realize("lorentz pair"), 1e-3, 7)
+    n_tau = int(inst.G.shape[-1])
+    dtau = 8.0 / (n_tau - 1)
+    kw = dict(n_samples=16, bounds=False, max_births=0)
+
+    def warnings_with(**recipe):
+        flow.meta = {"recipe": recipe}
+        rep = continue_posterior(flow, inst.G, inst.truth.x, 8.0, inst.sigma, inst.isr,
+                                 generator=torch.Generator().manual_seed(1), **kw)
+        return [w for w in rep.warnings if "time slices" in w or "dtau" in w]
+
+    assert not warnings_with(max_ntau=n_tau, dtau_choices=[dtau])
+    assert any("time slices" in w for w in warnings_with(max_ntau=n_tau - 1, dtau_choices=[dtau]))
+    assert any("dtau" in w for w in warnings_with(max_ntau=n_tau, dtau_choices=[4 * dtau, 8 * dtau]))
+
+
 def test_band_table_recovers_a_known_overdispersion():
     """Samples twice as wide as the truth's distribution: the table finds the narrower level."""
     from statistics import NormalDist
@@ -215,8 +237,9 @@ def test_auto_floor_refits_line_spectra_and_leaves_broad_ones_alone(monkeypatch)
         assert r.diagnostics["band_levels"][0.9] == 0.9 and "not applied" in r.summary()
         assert r.diagnostics["line_shape_readings"] and "both readings" in r.summary()
         for w in r.windows:
-            assert w["q05"] == min(w["as_fitted"][0], w["sharp_lines"][0])
-            assert w["q95"] == max(w["as_fitted"][1], w["sharp_lines"][1])
+            # the lower end of both readings, and never below zero weight
+            assert w["q05"] == max(min(w["as_fitted"][0], w["sharp_lines"][0]), 0.0)
+            assert w["q95"] == max(w["as_fitted"][1], w["sharp_lines"][1], 0.0)
     # the lines sit at +-1, half a unit from the window edges at +-0.5 and +-1.5: read as sharp
     # lines their weight is all inside [0.5, 1.5); as fitted, part of it leaks into the neighbours
     mid = next(w for w in b.windows if w["window"] == (0.5, 1.5))
@@ -278,7 +301,9 @@ def test_narrow_lines_are_fitted_as_zero_width_lines(tmp_path, monkeypatch):
     assert mid["q05"] <= 0.5 <= mid["q95"] and mid["q95"] - mid["q05"] < 0.02
     assert d["window_interval_floor"] > 0
     for w in r.windows:
-        assert w["q95"] - w["q05"] >= 2 * d["window_interval_floor"] * (1 - 1e-9)
+        # the floor on both sides, or on the upper side alone where the interval starts at zero
+        sides = 2 if w["q05"] > 0 else 1
+        assert w["q95"] - w["q05"] >= sides * d["window_interval_floor"] * (1 - 1e-9)
     # the quantile band is that of the rest of the spectrum; the lines' weight is listed per grid
     # node and included in the mean, whose integral over the grid is the total weight
     mean, om = np.asarray(r.band["mean"]), np.asarray(r.omega)

@@ -1771,6 +1771,36 @@ the data cannot separate (a width the data choose would serve them better
 than one line), and the flagged spectrum that is not stated to be discrete
 at error bars the data cannot decide — reported as before.
 
+(xxxii) **Stated intervals cut to the possible range; a warning for time
+grids outside the trained range** (*measured*, 2026-11-27; `posterior.py`,
+`scripts/step3/interval_cut_recount.py`,
+`out/step3/interval_cut_F3L_60k_s1/`).  The defect: on the DQMC dimer the
+report stated intervals with negative lower ends (−0.034) and upper ends
+beyond the range the data alone allow (0.526 against 0.504).  A pole with an
+asymmetric residue dips below zero in its tail, and the sharp-line readings
+of the narrow poles are not fitted.  The stated interval of a window is now
+cut to [max(lower end of the data-alone range, 0), upper end of that range];
+an interval wholly outside the range is left as it is and warned about, as
+before.
+*Recount on stored judge rows* (the cut applied to the stored intervals, no
+model run; 15,092 windows of the line-fit, table, edge and discrete-statement
+judges): lattice spectra unchanged (0.49 / 0.90, widths 0.2–0.5% narrower);
+line spectra 0.48–0.50 → 0.56–0.57 at the 50% level and 0.80–0.86 →
+0.82–0.86 at the 90% level, 90% widths 8–10% narrower; through the line-fit
+judge 0.65 / 0.91 → 0.68 / 0.91, widths 5% narrower.  The gain at the 50%
+level is windows with no line in them, whose interval lay just below zero
+and now starts at zero.  One window lost in 15,092: the lattice spectrum at
+β = 1 whose stored data-alone range had the support assumption removed in
+(xxviii).  The coverage numbers quoted in (xxvi)–(xxxi)
+are from before the cut.
+*Time grid*: the report warns when the grid has more slices than the
+checkpoint was trained on (401) or Δτ is outside its range.  One check, not a
+judged setting: a semicircle band at β = 16, error bar 1e-3, on 801 slices
+(Δτ = 0.02): exact weight inside the stated 90% interval in 7 of 7 windows;
+on 321 slices 6 of 7, the miss by 0.001.
+*Also*: checkpoints are read with `weights_only=True` (all 24 checkpoints
+under `out/` load that way).
+
 **Gates for calling it shippable**, and where seed 1 stands (2026-11-25,
 after (xxiv)):
 (1) known-answer W₁ at or below MaxEnt on every family — *met on the ten

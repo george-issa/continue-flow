@@ -886,6 +886,18 @@ def continue_posterior(flow, G, x, beta: float, sigma, inv_sqrt_R=None, bins=Non
     if not min(betas) * 0.45 <= float(beta) <= max(betas) * 2.2:
         warnings.append(f"beta = {beta:g} is outside the range this checkpoint was trained on "
                         f"({min(betas):g} to {max(betas):g}).")
+    # the time grid: the flow reads one token per slice and has seen grids up to max_ntau slices
+    n_tau, max_ntau = int(G.shape[-1]), recipe.get("max_ntau")
+    dtaus = recipe.get("dtau_choices")
+    if max_ntau and n_tau > max_ntau:
+        warnings.append(f"{n_tau} time slices is more than this checkpoint was trained on (up to "
+                        f"{max_ntau}); results on longer grids are not covered by the tests against "
+                        "exact answers.")
+    elif dtaus and n_tau > 1:
+        dtau = float(beta) / (n_tau - 1)
+        if not min(dtaus) * 0.95 <= dtau <= max(dtaus) * 1.05:
+            warnings.append(f"dtau = {dtau:.3g} is outside the range this checkpoint was trained on "
+                            f"({min(dtaus):g} to {max(dtaus):g}).")
 
     omega = np.linspace(-8.0, 8.0, 801) if omega is None else np.asarray(omega, float)
     nu = torch.tensor(omega * beta, dtype=torch.float64)
@@ -984,12 +996,24 @@ def continue_posterior(flow, G, x, beta: float, sigma, inv_sqrt_R=None, bins=Non
             if pad:
                 row.update(q05=row["q05"] - pad, q95=row["q95"] + pad, q25=row["q25"] - pad,
                            q75=row["q75"] + pad)
+            # A weight is not negative, and it is not outside what the data alone allow.  The
+            # samples can say otherwise: a pole with an asymmetric residue dips below zero in its
+            # tail, and the sharp-line readings were not fitted.  The stated interval is cut to
+            # the possible range; the exact weight is in that range (in every one of 1539 windows
+            # judged), so the cut cannot remove it.
+            cut_lo, cut_hi, outside = 0.0, float("inf"), False
+            if bnd is not None and bnd["feasible"]:
+                # a posterior interval that leaves the bracket altogether contradicts the data
+                outside = row["q95"] < bnd["lo"] - 1e-6 or row["q05"] > bnd["hi"] + 1e-6
+                cut_lo, cut_hi = max(bnd["lo"], 0.0), bnd["hi"]
+            if not outside:
+                row.update({k: float(min(max(row[k], cut_lo), cut_hi))
+                            for k in ("q05", "q25", "q75", "q95")})
             if bnd is not None and bnd["feasible"]:
                 width = max(bnd["hi"] - bnd["lo"], 1e-12)
                 row.update(lo=bnd["lo"], hi=bnd["hi"],
                            share=float((row["q95"] - row["q05"]) / width))
-                # a posterior interval that leaves the bracket contradicts the data
-                if row["q95"] < bnd["lo"] - 1e-6 or row["q05"] > bnd["hi"] + 1e-6:
+                if outside:
                     warnings.append(f"the posterior weight in [{lo_w:g}, {hi_w:g}) lies outside "
                                     "what the data allow; do not use this window.")
             else:
