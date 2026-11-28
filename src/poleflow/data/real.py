@@ -44,6 +44,7 @@ from .noise import chi2_target, ledoit_wolf_correlation, whitener
 
 __all__ = [
     "autocorrelation_report",
+    "bin_statistics",
     "MeasuredGreens",
     "from_bins",
     "read_text_bins",
@@ -488,6 +489,48 @@ def read_holstein_cube(
     mg.meta.update(n=HOLSTEIN_N[n_idx], omega=HOLSTEIN_OMEGA[omega_idx],
                    beta=beta, dtau=HOLSTEIN_DTAU, source=path)
     return mg
+
+
+#: Excess kurtosis above which the bins of a time slice count as far from Gaussian.
+HEAVY_KURTOSIS = 3.0
+
+
+def bin_statistics(bins: torch.Tensor) -> dict:
+    r"""Are the bins near enough to Gaussian for their error bars to mean something?
+
+    An error bar taken from :math:`N` bins assumes that no few bins carry the
+    variance.  In DQMC at low temperature they can: the estimator of
+    :math:`G(\tau)` is then heavy-tailed, most bins sit close together and a
+    rare one lies far out.  A run or a part of a run without such a bin has a
+    small error bar and a mean that is off by many of them.  Measured on the
+    runs of exactly solvable clusters (docs/TRAINING.md (xxxv)): at
+    :math:`\beta = 8` the bins of 85% of the time slices have an excess
+    kurtosis above 3 (median 28), blocks of 25 bins differ from the full mean
+    by 6 of their own error bars, and intervals from subsets of the bins hold
+    the exact answer 0.6 to 0.7 of the time instead of 0.9; at
+    :math:`\beta = 2` and on the Holstein cell it is 2 to 15% of the slices
+    and the intervals hold.
+
+    Returns, over the time slices that have any variance: ``heavy_share`` (the
+    share whose bins have excess kurtosis above :data:`HEAVY_KURTOSIS`; 0 for
+    Gaussian bins at any ``N``), ``kurtosis_median``, ``largest_bin_share``
+    (the largest share of one slice's variance carried by a single bin),
+    ``n_bins`` and ``n_slices``.
+    """
+    b = torch.as_tensor(bins).detach().cpu().to(torch.float64)
+    n = b.shape[0]
+    d = b - b.mean(0, keepdim=True)
+    m2 = (d * d).mean(0)
+    live = m2 > 1e-18 * float(m2.max().clamp_min(1e-300))
+    if n < 4 or not bool(live.any()):
+        return {"n_bins": int(n), "n_slices": int(live.sum()), "heavy_share": 0.0,
+                "kurtosis_median": 0.0, "largest_bin_share": 0.0}
+    d, m2 = d[:, live], m2[live]
+    kurt = (d ** 4).mean(0) / (m2 * m2) - 3.0
+    return {"n_bins": int(n), "n_slices": int(live.sum()),
+            "heavy_share": float((kurt > HEAVY_KURTOSIS).double().mean()),
+            "kurtosis_median": float(kurt.median()),
+            "largest_bin_share": float(((d * d).amax(0) / (d * d).sum(0)).max())}
 
 
 def autocorrelation_report(bins: torch.Tensor, max_block: int = 64) -> dict:

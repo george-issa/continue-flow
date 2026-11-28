@@ -127,6 +127,25 @@ def test_a_time_grid_outside_the_trained_range_draws_a_warning():
     assert any("dtau" in w for w in warnings_with(max_ntau=n_tau, dtau_choices=[4 * dtau, 8 * dtau]))
 
 
+def test_heavy_tailed_bins_draw_a_warning_and_sound_ones_do_not():
+    path = "out/flow/F_60k.pt"
+    if not os.path.exists(path):
+        pytest.skip("reference flow checkpoint not present")
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import continue_measured
+    flow = load_flow(path).eval()
+    kw = dict(n_samples=16, bounds=False, max_births=0)
+    dimer = continue_measured(flow, C.hubbard_dimer_cell()[0], generator=torch.Generator().manual_seed(1), **kw)
+    assert any("far from Gaussian" in w for w in dimer.warnings)
+    assert dimer.diagnostics["bins"]["heavy_share"] > 0.7
+    holstein = continue_measured(flow, C.holstein_cell(), generator=torch.Generator().manual_seed(1), **kw)
+    assert not any("far from Gaussian" in w or "too few to check" in w for w in holstein.warnings)
+    few = C.holstein_cell()
+    few = type(few)(bins=few.bins[:8].clone(), tau=few.tau, beta=few.beta, includes_endpoints=few.includes_endpoints)
+    rep = continue_measured(flow, few, generator=torch.Generator().manual_seed(1), **kw)
+    assert any("too few to check" in w for w in rep.warnings)
+
+
 def test_band_table_recovers_a_known_overdispersion():
     """Samples twice as wide as the truth's distribution: the table finds the narrower level."""
     from statistics import NormalDist

@@ -111,3 +111,34 @@ def test_the_command_reads_a_file_that_stops_before_beta_and_refuses_a_spin_summ
     with pytest.raises(SystemExit) as e:
         _load_measured(args(doubled))
     assert "spin-summed" in str(e.value)
+
+
+def test_gaussian_bins_pass_the_check_and_heavy_tailed_bins_do_not():
+    from poleflow.data.real import bin_statistics
+    rng = np.random.default_rng(0)
+    for n in (16, 25, 400):
+        s = bin_statistics(torch.tensor(rng.normal(size=(n, 80))))
+        assert s["heavy_share"] < 0.1 and s["n_slices"] == 80 and s["n_bins"] == n
+    # mostly quiet bins and a rare one far out: what DQMC gives at low temperature
+    quiet = rng.normal(size=(400, 80)) * 1e-3
+    quiet[rng.random((400, 80)) < 0.01] += 0.05
+    s = bin_statistics(torch.tensor(quiet))
+    assert s["heavy_share"] > 0.8 and s["largest_bin_share"] > 0.1
+    # time slices pinned by a symmetry have no variance and are left out
+    pinned = rng.normal(size=(50, 10))
+    pinned[:, 0] = 0.5
+    assert bin_statistics(torch.tensor(pinned))["n_slices"] == 9
+    assert bin_statistics(torch.tensor(rng.normal(size=(3, 10))))["heavy_share"] == 0.0     # too few to say
+
+
+def test_the_check_of_the_bins_on_the_two_versioned_dqmc_runs():
+    """The dimer at beta = 8 has heavy-tailed bins (TRAINING.md (xxxv)); the Holstein cell does not."""
+    from poleflow.data.real import bin_statistics
+    from poleflow.evaluation import cases as C
+    from poleflow.posterior import HEAVY_BINS_SHARE
+    dimer_bins = C.hubbard_dimer_cell()[0].bins                 # (measured data, exact spectrum)
+    dimer, holstein = bin_statistics(dimer_bins), bin_statistics(C.holstein_cell().bins)
+    assert dimer["heavy_share"] > 0.7 > HEAVY_BINS_SHARE and dimer["largest_bin_share"] > 0.5
+    assert holstein["heavy_share"] < 0.1 < HEAVY_BINS_SHARE
+    # and the check already sees it in the first 25 bins of the dimer
+    assert bin_statistics(dimer_bins[:25])["heavy_share"] > HEAVY_BINS_SHARE

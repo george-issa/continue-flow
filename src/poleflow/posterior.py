@@ -186,6 +186,11 @@ def fit_band_table(need, rel_noise, beta, noise_edges=(), beta_edges=(), targets
 #: "consistent with the data" for the prior-free bracket.  With 65 residuals
 #: the truth satisfies it with probability 0.97.
 BOX_SIGMA = 3.5
+#: Share of the time slices with heavy-tailed bins (:func:`poleflow.data.real.bin_statistics`)
+#: from which the report warns that the error bars cannot be relied on.  Gaussian bins give 0 at
+#: any bin count; the DQMC runs whose intervals hold give 0.02 to 0.15; those at beta = 8 whose
+#: subsets fail give 0.35 to 0.86 (TRAINING.md (xxxv), (xxxviii)).
+HEAVY_BINS_SHARE = 0.25
 #: Seconds one linear program of :func:`prior_free_bounds` may take before its window is given up.
 BOUNDS_TIME_LIMIT = 30.0
 #: Default frequency windows (physical units) for weights and brackets.
@@ -257,6 +262,8 @@ def prior_free_bounds(G, x, beta, sigma, inv_sqrt_R=None, windows=DEFAULT_WINDOW
             if r.status != 0:
                 res["feasible"] = False
                 res[key] = float("nan")
+                # 2: no non-negative spectrum satisfies the box; anything else: not solved in time
+                res["no_spectrum"] = res.get("no_spectrum", False) or r.status == 2
             else:
                 res[key] = float(sign * r.fun / N)
         out.append(res)
@@ -291,11 +298,13 @@ class PosteriorReport:
     def summary(self) -> str:
         acc = self.n_accepted / max(self.n_samples, 1)
         lines = [
-            f"posterior from {self.n_accepted} of {self.n_samples} samples "
-            f"({acc:.0%} accepted, {self.n_kept_raw} needed no refinement, "
-            f"{self.diagnostics.get('samples_given_a_pole', 0)} were given an extra pole"
-            + (f", {self.diagnostics['samples_restarted']} were restarted from a sample that fits"
-               if self.diagnostics.get("samples_restarted") else "") + ")",
+            (f"NO sample fits the data: the {self.n_samples} samples below are the unfitted ensemble"
+             if self.diagnostics.get("no_sample_fits") else
+             f"posterior from {self.n_accepted} of {self.n_samples} samples "
+             f"({acc:.0%} accepted, {self.n_kept_raw} needed no refinement, "
+             f"{self.diagnostics.get('samples_given_a_pole', 0)} were given an extra pole"
+             + (f", {self.diagnostics['samples_restarted']} were restarted from a sample that fits"
+                if self.diagnostics.get("samples_restarted") else "") + ")"),
             f"  fit      : chi2 / target median "
             f"{np.median(self.chi2) / self.chi2_target:.2f} "
             f"[{np.quantile(self.chi2, 0.05) / self.chi2_target:.2f}, "
@@ -791,11 +800,30 @@ def continue_posterior(flow, G, x, beta: float, sigma, inv_sqrt_R=None, bins=Non
     gmin_fit = gmin_trained / factor
     acc = (c2 <= band_edge) if usable is None else usable
     warnings = []
-    if not bool(acc.any()):
+    no_fit = not bool(acc.any())
+    if no_fit:
         warnings.append("NO sample fits the data within noise; the band below is the unfitted "
-                        "ensemble and should not be used. The data are outside what this "
-                        "checkpoint can represent.")
+                        "ensemble and should not be used. Either the data are outside what this "
+                        "checkpoint can represent, or their error bars are too small (see any "
+                        "warning about the bins below).")
         acc = torch.ones_like(acc)
+    if bins is not None:
+        from .data.real import bin_statistics
+        bin_stats = bin_statistics(bins)
+        if bin_stats["n_bins"] >= 16 and bin_stats["heavy_share"] >= HEAVY_BINS_SHARE:
+            warnings.append(
+                f"the bins are far from Gaussian: at {bin_stats['heavy_share']:.0%} of the time slices "
+                f"a few bins carry the variance (a single bin up to "
+                f"{bin_stats['largest_bin_share']:.0%} of it). Error bars taken from such bins are "
+                "unreliable and tend to be too small, and so are the intervals below. On DQMC runs "
+                "like this the stated 90% intervals held the exact weight 0.6 to 0.7 of the time "
+                f"from 25 to 200 bins. This run has {bin_stats['n_bins']}; more bins, or longer "
+                "ones, are the remedy.")
+        elif bin_stats["n_bins"] < 16:
+            warnings.append(f"{bin_stats['n_bins']} bins are too few to check whether the bins are near "
+                            "enough to Gaussian for their error bars to hold (16 are needed).")
+    else:
+        bin_stats = None
     frac = float(acc.float().mean())
     if 0.0 < frac < 0.5:
         warnings.append(f"only {frac:.0%} of samples could be brought onto the data; the rest "
@@ -1020,9 +1048,15 @@ def continue_posterior(flow, G, x, beta: float, sigma, inv_sqrt_R=None, bins=Non
                 row.update(lo=float("nan"), hi=float("nan"), share=float("nan"))
             win.append(row)
         unsolved = sum(b is not None and not b["feasible"] for b in pf)
-        if unsolved:
-            warnings.append(f"the range the data alone allow could not be computed for {unsolved} of "
-                            f"{len(win)} windows (the linear program had no solution or did not finish); "
+        none = sum(b is not None and b.get("no_spectrum", False) for b in pf)
+        if none:
+            warnings.append(f"no non-negative spectrum fits these data within {BOX_SIGMA:g} error bars "
+                            f"({none} of {len(win)} windows): the error bars are too small for the "
+                            "data (few bins, or bins far from Gaussian), or this is not a fermionic "
+                            "single-particle G. The intervals below rest on those error bars.")
+        if unsolved - none > 0:
+            warnings.append(f"the range the data alone allow could not be computed for {unsolved - none} "
+                            f"of {len(win)} windows (the linear program did not finish); "
                             "the posterior intervals of those windows are not checked against it.")
 
     name = getattr(flow, "meta", {}).get("recipe", {}).get("name") if isinstance(
@@ -1036,7 +1070,8 @@ def continue_posterior(flow, G, x, beta: float, sigma, inv_sqrt_R=None, bins=Non
         chi2=chi2_sel.numpy(), chi2_target=float(chi2_target), n_samples=S,
         n_accepted=int(acc.sum()), n_kept_raw=int((acc & kept_raw).sum()), windows=win,
         warnings=warnings, prior=prior,
-        diagnostics={"accepted_fraction": frac, "raw_chi2_median": float(c_raw.median()),
+        diagnostics={"accepted_fraction": 0.0 if no_fit else frac, "no_sample_fits": no_fit,
+                     "bins": bin_stats, "raw_chi2_median": float(c_raw.median()),
                      "samples_given_a_pole": int((n_born[acc] > 0).sum()),
                      "samples_restarted": line_diag.get("samples_restarted", 0),
                      "n_poles_median": float(n_pres.float().median()),
