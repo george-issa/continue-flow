@@ -35,7 +35,7 @@ poleflow = "poleflow.cli:main"
 
 [project.optional-dependencies]
 plot = ["matplotlib"]
-dev = ["pytest", "pytest-xdist", "matplotlib"]
+dev = ["pytest", "pytest-xdist", "pytest-timeout", "matplotlib"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
