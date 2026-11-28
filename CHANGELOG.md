@@ -8,6 +8,9 @@
   (`--endpoint`, decided from the data by default).
 - A spin-summed G, a transposed file and values that are not numbers are
   refused with the reason.
+- The report checks the bins: it warns when they are far from Gaussian, when
+  there are too few to check, and when no non-negative spectrum fits the data
+  within the error bars.
 
 ## 0.1.0
 

@@ -208,6 +208,14 @@ One row per run. Left: share of windows whose exact weight lies inside the state
 
 ![dqmc_few_bins.png](2_real_data/dqmc_few_bins.png)
 
+**dqmc_check_of_the_bins.png**
+
+The check of the bins the report makes, on the three DQMC runs with known answers and on the Holstein cell: the share of time slices whose bins are heavy-tailed. The two runs at beta = 8 are far above the line from which the report warns; the two whose error bars hold are below it.
+
+Left: the check on subsets of consecutive bins, one point per subset, the line through the medians. Right: how often the stated 90% intervals held the exact weight from the same subsets.
+
+![dqmc_check_of_the_bins.png](2_real_data/dqmc_check_of_the_bins.png)
+
 **bands_of_many_lines.png**
 
 Where the intervals fail: bands of N lines at random positions under a semicircle, N from 4 to 512. For the data such a band is a continuous one with more structure than the model was trained on. The report flags only the smallest N, and from 16 to 256 lines at beta = 8 its intervals are too narrow with no warning.

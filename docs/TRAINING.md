@@ -1988,6 +1988,37 @@ Seed 1's band table on the 248 unflagged of seed 3's 288 held-out prior
 draws: 0.503 ± 0.017 / 0.901 ± 0.010 (plain quantiles 0.569 / 0.915); by β
 0.45–0.60 / 0.82–0.97, low at β = 2 and 8 (0.82, 0.87).
 
+(xxxviii) **A check of the bins in the report: it warns on the runs whose
+error bars do not hold, and not on those whose do** (*measured*, 2026-11-27;
+`data/real.py::bin_statistics`, `posterior.HEAVY_BINS_SHARE`,
+`scripts/dqmc/bin_statistics_judge.py`,
+`out/dqmc/bin_statistics_F3L_60k_s1/`).  The cause of (xxxv) made visible to
+the user.  The check is the share of time slices whose bins have an excess
+kurtosis above 3: 0 for Gaussian bins at any bin count.
+*On all 400 bins*: dimer at β = 8 0.85 (median excess kurtosis 28, a single
+bin carries up to 78% of one slice's variance), ring 0.86 (median 31), dimer
+at β = 2 0.15 (median 0.9), Holstein cell 0.02 (median 0.5).  So both runs at
+β = 8 are heavy-tailed, the ring as much as the dimer; the autocorrelation
+of the bins had not shown it (1.01 and 1.37).
+*On subsets of consecutive bins* (12 per count): the report's threshold of
+0.25 is exceeded on the dimer at β = 8 in 92% of the subsets of 16 bins and
+in all from 25; on the ring in 83% and in all from 25; on the dimer at β = 2
+never; on the Holstein cell in 1 of 72.
+*What the report says now.*  Above the threshold: that the bins are far from
+Gaussian, with the two numbers, that error bars from such bins tend to be too
+small, and what the intervals did on such runs.  With fewer than 16 bins:
+that the check cannot be made.  When no non-negative spectrum is within 3.5
+error bars of the data (before: "the range could not be computed"): that the
+error bars are too small for the data.  When no sample fits, the first line
+says so instead of "100% accepted".
+*How few bins when the bins are sound*: the dimer at β = 2 from 6, 8, 12 and
+16 consecutive bins (five subsets each, 64 samples): the exact weight inside
+the stated 90% interval in 137 of 140 windows, 6 or 7 of 7 in every subset.
+So the bin count alone is not the problem down to 6 bins on 41 time slices;
+the statistics of the bins are.
+Not a remedy: the report cannot make an error bar right that the bins do not
+support.  It says so.
+
 **Gates for calling it shippable**, and where seed 1 stands (2026-11-25,
 after (xxiv)):
 (1) known-answer W₁ at or below MaxEnt on every family — *met on the ten

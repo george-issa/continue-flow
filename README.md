@@ -105,9 +105,9 @@ The exact weights of this spectrum are 0.073, 0.426, 0.001, 0, 0.001, 0.426 and
 - **weight per window** — the 5–95% interval of the samples, next to the range
   allowed by the data alone. The share is the ratio of the two widths. The
   smaller it is, the more of the answer comes from the training prior.
-- **warnings** — narrow lines the model was not trained on, error bars smaller
-  than the systematic errors, inputs outside the trained range, every pole in
-  use.
+- **warnings** — bins that are far from Gaussian, narrow lines the model was
+  not trained on, error bars smaller than the systematic errors, inputs outside
+  the trained range, every pole in use.
 
 `report.npz` holds the band of A(ω) on a grid and every accepted pole set.
 `report.npz.json` holds the window table, the warnings and the diagnostics.
@@ -255,6 +255,13 @@ full record of what was measured is [`docs/TRAINING.md`](docs/TRAINING.md).
 - **Continuous spectra at relative error bars of 1e-4 and below.** The 90%
   interval holds the exact weight 79–86% of the time. The misses are below
   0.005 of the total weight.
+- **Bins that are far from Gaussian.** In DQMC at low temperature most bins
+  sit close together and a rare one lies far out. An error bar taken from few
+  such bins is too small, and no method can be right on those data as given.
+  On two runs of clusters at β = 8, continued from 25 to 200 of their 400 bins,
+  the 90% intervals held the exact weight 0.6 to 0.7 of the time. The report
+  checks the bins and warns; it warned on every such subset of 25 bins or
+  more, and never on the run at β = 2, where the intervals hold down to 6 bins.
 - **Scope.** Fermionic G(τ) only. No bosonic correlators, no self-energies.
 - **The prior.** The intervals are a posterior under the training prior. They
   are tested on the spectra listed above and say nothing about a spectrum

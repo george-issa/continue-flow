@@ -112,6 +112,12 @@ COPIES = (
      "One row per run. Left: share of windows whose exact weight lies inside the stated 90% (filled) and 50% "
      "(open) intervals, at the defaults (blue) and with the spectrum stated to be discrete (green); dashes "
      "are nominal. Middle: the error. Right: the mean width of the 90% interval."),
+    ("2_real_data", "dqmc_check_of_the_bins.png", ("out/dqmc/bin_statistics_{m}/bin_statistics.png",),
+     "The check of the bins the report makes, on the three DQMC runs with known answers and on the Holstein "
+     "cell: the share of time slices whose bins are heavy-tailed. The two runs at beta = 8 are far above the "
+     "line from which the report warns; the two whose error bars hold are below it.",
+     "Left: the check on subsets of consecutive bins, one point per subset, the line through the medians. "
+     "Right: how often the stated 90% intervals held the exact weight from the same subsets."),
     ("3_error_bars", "bands_of_many_lines.png", ("out/step3/line_density_{m}/line_density.png",),
      "Where the intervals fail: bands of N lines at random positions under a semicircle, N from 4 to 512. "
      "For the data such a band is a continuous one with more structure than the model was trained on. The "
