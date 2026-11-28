@@ -226,7 +226,7 @@ Share of windows whose exact weight lies inside the 50% and 90% intervals of the
 
 ## 4_checks
 
-Checks behind the numbers. The seeds of the earlier recipe, the families left out and the line-spectrum headroom were made on the `F3_60k` trainings (the same recipe without exact line spectra as targets) and are not redrawn per model.
+Checks behind the numbers. The seeds of the earlier recipe and the line-spectrum headroom were made on the `F3_60k` trainings (the same recipe without exact line spectra as targets) and are not redrawn per model.
 
 **edges_of_trained_range.png**
 
@@ -254,9 +254,9 @@ Left: share of windows whose exact weight lies inside the stated intervals, befo
 
 **training_seeds.png**
 
-Two independent trainings of this model's recipe, through the report, on the same known answers.
+Three independent trainings of this model's recipe, through the report, on the same known answers.
 
-Left: error per setting for each seed. Middle: the same spectrum under the two trainings, one point each. Right: the stated intervals. Agreement shows the results belong to the recipe, not to one run.
+Left: error per setting for each seed. Middle: the same spectrum under two trainings, one point each. Right: the stated intervals. Agreement shows the results belong to the recipe, not to one run.
 
 ![training_seeds.png](4_checks/training_seeds.png)
 

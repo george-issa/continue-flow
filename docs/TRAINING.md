@@ -1961,6 +1961,33 @@ measure, and at β = 2 the factor 3 in W₁ is mostly tails: on window weights
 it is 1.25, lower on 11 of 20.  The W₁ ratios quoted in (xix)–(xxxi) should
 be read with this.
 
+(xxxvii) **Leave-families-out and a third seed for the recipe with exact
+line spectra as targets: both gates pass** (*measured*, 2026-11-27;
+`scripts/step3/run_leave_out_lines.sh`, `leave_out_bank.py`,
+`leave_out_summary.py`, `seed_report_summary.py`,
+`out/step3/leave_out_F3L.{json,png}`,
+`out/step3/seeds_lines_report3.{json,png}`).  Gates (2) and (6) had been met
+on the earlier recipe only ((xxi), (xxiv)).
+*Leave-out.*  `F3L_60k_lo`: the same eight families withheld as in (xxiv),
+five lattice families out of the label bank and three line families out of
+the bank and of the generator of broadened lines, 60k steps, seed 1, judged
+on the known answers at five settings.  Error over the full model's, per
+spectrum: lattice families never seen 1.042 [1.014, 1.071] (50 spectra; one
+seed against another 1.004 [0.993, 1.016]), lattice families seen 0.988
+[0.964, 1.012]; line families never seen 1.009 [0.981, 1.038] (30), seen
+1.011 [0.985, 1.037].  Largest for one family: honeycomb lattice 1.09 [1.01,
+1.18], BCS 1.07 [1.00, 1.14].  Against MaxEnt on the families never seen:
+0.48 (full model 0.46), below MaxEnt on 41 of 50.
+*Third seed.*  `F3L_60k_s3` through the report on the 100 lattice and 120
+line spectra of the five settings: over seed 1, lattice 0.991 [0.979,
+1.004], lines 1.012 [1.001, 1.023] (seed 2: 0.995, 0.998); narrow lines
+flagged on 97 of 120 line spectra, the same as seed 1 on 114, and on none of
+the lattice spectra.  Stated intervals without a table: lattice 0.586 /
+0.930 (seed 1: 0.583 / 0.931), flagged lines 0.592 / 0.885 (0.511 / 0.903).
+Seed 1's band table on the 248 unflagged of seed 3's 288 held-out prior
+draws: 0.503 ± 0.017 / 0.901 ± 0.010 (plain quantiles 0.569 / 0.915); by β
+0.45–0.60 / 0.82–0.97, low at β = 2 and 8 (0.82, 0.87).
+
 **Gates for calling it shippable**, and where seed 1 stands (2026-11-25,
 after (xxiv)):
 (1) known-answer W₁ at or below MaxEnt on every family — *met on the ten
@@ -2001,7 +2028,9 @@ at eight (β = 8 with noise 1e-5, 1e-3 and 1e-2, β = 16, β = 20 with noise
 the fit has zero-width lines ((xxxi); β = 8, noise 1e-5: 1.56 → 0.64
 [0.45, 0.92]); with the spectrum stated to be discrete, ahead at eleven
 and level at β = 2 (0.89 [0.75, 1.06]);
-(2) not repeated for this recipe; (3) met on unflagged prior draws (0.50 /
+(2) done for this recipe: 4% worse on the five lattice families never seen
+(1.04 [1.01, 1.07]), nothing measurable on the three line families
+((xxxvii)); (3) met on unflagged prior draws (0.50 /
 0.90 held out), on lattice spectra pooled (0.48 / 0.91 and 0.49 / 0.90 at
 the edges; by setting 0.79 to 0.99 at the 90% level, the low ones at noise
 1e-5 and 1e-4 with misses below 0.005 of the weight) and on flagged line
@@ -2011,9 +2040,9 @@ the report cannot flag, a seventh of them, *not met as it stands* (0.32 /
 discrete (0.68 / 0.95; flagged ones 0.80 / 0.96 at 0.6 of the width, (xxx),
 (xxxi));
 (4) 0.50 pooled, 0.44 below error bars of 1e-4 and 0.56 between 1e-3 and
-1e-2; (5) met (0.0299 / 0.0638); (6) two seeds, within 1% of each other
-through the report, the same spectra flagged on 115 of 120, seed 1's table
-transfers ((xxvii));
+1e-2; (5) met (0.0299 / 0.0638); (6) three seeds, within 1% of each other
+through the report, the same spectra flagged on 114 to 115 of 120, seed 1's
+table transfers to both ((xxvii), (xxxvii));
 (7) three runs ((xxvi), (xxix)): dimer at β = 8, W₁ 0.319 against MaxEnt's
 0.777, 7 of 7 windows (with the statement 0.291, 5 of 7, the misses 0.01 of
 the weight); ring of four sites 0.320 against 0.657, 4 of 7 windows (7 of 7
@@ -2023,6 +2052,15 @@ The command a user runs exists since 2026-11-25: `spevae continue` gives
 the posterior report for a flow checkpoint (`posterior.continue_measured`),
 and reproduces the dimer judge's report to the digit.  No checkpoint is
 published.
+Added 2026-11-27, from testing the report as a stranger would use it:
+gate (3) is *not met* on bands of many unresolved lines ((xxxiii): 0.35 /
+0.75 from 16 to 256 lines at β = 8, no warning), nor from subsets of the
+bins of the DQMC runs at β = 8 ((xxxv)); on Lorentzians, Gaussians and pole
+sets it is met and conservative ((xxxvi): 0.64 / 0.97).  Gate (1) on a
+single Gaussian at error bars of 1e-4 is not met (MaxEnt 2.35 times more
+accurate, (xxxvi)), and the W₁ ratios to MaxEnt are tail-sensitive: on
+window weights the lattice ratio is about 0.5 at β = 8 and 16 and 0.8 at
+β = 2.  The model is not approved for release as it stands.
 
 **Step-2 build (1): the smooth-family label bank — built, judged,
 pinned** (*measured*, 2026-08-27).  `data/label_bank.py` +

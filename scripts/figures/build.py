@@ -145,14 +145,15 @@ COPIES = (
      "they are peaks of the minimum width or band edges it rises, and the data cannot tell the two apart.",
      "Left: share of windows whose exact weight lies inside the stated intervals, before and with lines "
      "fitted whenever they fit. Right: error of the mean window weights, with lines over before."),
-    ("4_checks", "training_seeds.png", ("F3L_60k_s1=out/step3/seeds_lines_report.png",),
-     "Two independent trainings of this model's recipe, through the report, on the same known answers.",
-     "Left: error per setting for each seed. Middle: the same spectrum under the two trainings, one point "
-     "each. Right: the stated intervals. Agreement shows the results belong to the recipe, not to one run."),
+    ("4_checks", "training_seeds.png", ("F3L_60k_s1=out/step3/seeds_lines_report3.png",
+                                        "F3L_60k_s1=out/step3/seeds_lines_report.png"),
+     "Three independent trainings of this model's recipe, through the report, on the same known answers.",
+     "Left: error per setting for each seed. Middle: the same spectrum under two trainings, one point each. "
+     "Right: the stated intervals. Agreement shows the results belong to the recipe, not to one run."),
     ("4_checks", "training_seeds_earlier_recipe.png", ("out/step3/seeds.png",),
      "Three independent trainings of the earlier recipe (`F3_60k`).",
      "Agreement between seeds shows how much of any difference is the luck of one training run."),
-    ("4_checks", "families_left_out.png", ("out/step3/leave_out.png",),
+    ("4_checks", "families_left_out.png", ("F3L_60k_s1=out/step3/leave_out_F3L.png", "out/step3/leave_out.png"),
      "A model trained without eight of the exactly solvable families, judged on them.",
      "Left: its error over the full model's, one point per spectrum; red families were never seen. Right: both "
      "against MaxEnt."),
@@ -167,7 +168,7 @@ COPIES = (
      "Left and middle: the error barely moves. Right: the stated intervals on line spectra, which improve "
      "because the retrained model's report flags narrow lines on twice as many of them."),
 )
-SHARED = {"training_seeds_earlier_recipe.png", "families_left_out.png", "line_spectra_headroom.png",
+SHARED = {"training_seeds_earlier_recipe.png", "line_spectra_headroom.png",
           "line_spectra_as_training_targets.png"}   # made on the F3_60k family
 
 
@@ -234,7 +235,7 @@ def main():
     # 2-4. copied from the judges
     heads = {"2_real_data": "Real DQMC data.",
              "3_error_bars": "Whether the stated intervals contain the truth as often as they say.",
-             "4_checks": "Checks behind the numbers. The seeds of the earlier recipe, the families left out and "
+             "4_checks": "Checks behind the numbers. The seeds of the earlier recipe and "
                          "the line-spectrum headroom were made on the `F3_60k` trainings (the same recipe "
                          "without exact line spectra as targets) and are not redrawn per model."}
     done = {"1_known_answers"}                      # its section is open: these follow the galleries
