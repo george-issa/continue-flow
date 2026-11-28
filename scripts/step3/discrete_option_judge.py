@@ -47,9 +47,9 @@ OFF, ON, INK = "#2a78d6", "#0b7a75", "#0b0b0b"
 
 
 def run(out, flow_path, beta, noise, kind):
-    from spevae.evaluation import cases as C
-    from spevae.models.flow import load_flow
-    from spevae.posterior import DEFAULT_WINDOWS, continue_posterior
+    from poleflow.evaluation import cases as C
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(flow_path).eval()

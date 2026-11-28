@@ -1,6 +1,6 @@
-# Evaluation: `spevae eval`
+# Evaluation: `poleflow eval`
 
-One frozen suite that every continuation method goes through: spevae checkpoints
+One frozen suite that every continuation method goes through: poleflow checkpoints
 under each inference pipeline, MaxEnt, DEAC, and any future method. Before this
 suite, the judges were ~50 one-off scripts with hardcoded paths, one noise draw
 per probe, and no baselines in the judged results. The suite replaces them for
@@ -8,11 +8,11 @@ judging; the scripts stay as the historical record.
 
 ```bash
 # fast tier (minutes): CI, screens
-spevae eval --model s1=out/step1/s1_metric.pt --model M1=out/step2/map_M1_60k.pt \
+poleflow eval --model s1=out/step1/s1_metric.pt --model M1=out/step2/map_M1_60k.pt \
             --tier fast --out out/eval/s1_vs_M1_fast
 
 # training-seed replicates: repeat a tag
-spevae eval --model M1=run_seed0.pt --model M1=run_seed1.pt --model M1=run_seed2.pt ...
+poleflow eval --model M1=run_seed0.pt --model M1=run_seed1.pt --model M1=run_seed2.pt ...
 
 # acceptance: reproduce the banked numbers (needs out/ on this machine)
 python scripts/eval/acceptance.py out/eval/acceptance
@@ -45,7 +45,7 @@ bit. The shipped SmoQyDEAC continuation of the same cell is a free comparator
 | `zd800`, `zd3000` | latent MAP descent (weights frozen, prior anchor 1), Adam for that many steps; on real data `refine_latent` |
 | `zdlm` | the same MAP objective minimised by Levenberg–Marquardt (`physics/lsq.py`) to a stationary point, or on a real cell to the calibrated noise floor; each row records `converged`, `stationary` and the iteration count |
 | `scan_minimal`, `scan_full` | z-descent 1500 (MAP 3000 on real data) → anchored rank scan (anchor 0.5 synthetic / 1.0 real, pre-refit 3000, drop reduction): the LR-selected minimal form and the prior-started full rendering (the dual output) |
-| `maxent` | ana_cont MaxEnt, flat default model, χ²-kink α. Synthetic cases get the exact noise covariance σᵢRᵢⱼσⱼ, the same information spevae's whitener uses |
+| `maxent` | ana_cont MaxEnt, flat default model, χ²-kink α. Synthetic cases get the exact noise covariance σᵢRᵢⱼσⱼ, the same information poleflow's whitener uses |
 | `deac` | SmoQyDEAC (real cells only in v1; it needs raw bins) |
 | `deac_shipped` | the SmoQyDEAC result shipped with the real cell |
 

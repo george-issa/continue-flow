@@ -26,12 +26,12 @@ import torch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from spevae import RefineConfig, load_model, refine_latent  # noqa: E402
-from spevae.benchmark import maxent_available, run_maxent  # noqa: E402
-from spevae.data import from_bins  # noqa: E402
-from spevae.metrics import spectral_report  # noqa: E402
-from spevae.paths import data_path  # noqa: E402
-from spevae.physics import (  # noqa: E402
+from poleflow import RefineConfig, load_model, refine_latent  # noqa: E402
+from poleflow.benchmark import maxent_available, run_maxent  # noqa: E402
+from poleflow.data import from_bins  # noqa: E402
+from poleflow.metrics import spectral_report  # noqa: E402
+from poleflow.paths import data_path  # noqa: E402
+from poleflow.physics import (  # noqa: E402
     consolidate_poles,
     positivity_certificate,
     refit_poles_to_greens,
@@ -120,7 +120,7 @@ FORMULAS = {
 
 def regen_dataset(name: str, beta: float = 10.0, n_tau: int = 201,
                   n_bins: int = 1000, noise: float = 1e-4, seed: int = 0):
-    from spevae.physics import PoleGreens, SpectralQuadrature
+    from poleflow.physics import PoleGreens, SpectralQuadrature
 
     quad = SpectralQuadrature.for_beta(beta, dtype=torch.float64)
     nu = quad.nodes.numpy()

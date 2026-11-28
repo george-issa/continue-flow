@@ -17,8 +17,8 @@ sys.path.insert(0, "src")
 
 import torch
 
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.models.flow import FlowPosterior, save_flow
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.models.flow import FlowPosterior, save_flow
 
 
 def main():
@@ -136,7 +136,7 @@ def main():
             ema.to(dev)
     recipe = {k: v for k, v in vars(args).items()}
     # families this run never saw: those missing from the bank and from the diagonalised models
-    from spevae.data.exact_models import EXACT_DISCRETE
+    from poleflow.data.exact_models import EXACT_DISCRETE
     left = set(getattr(gen.smooth_bank, "meta", None) and gen.smooth_bank.meta.get("left_out") or [])
     if args.p_exact > 0 and args.exact_families is not None:
         left |= set(EXACT_DISCRETE) - set(args.exact_families)

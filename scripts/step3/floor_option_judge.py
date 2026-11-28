@@ -51,9 +51,9 @@ STD, AUTO, ME, INK = "#9ec5f4", "#2a78d6", J.ME, J.INK
 
 def extra_discrete(beta, per_family):
     """Further draws of the exactly diagonalised families (not in the known-answer judge)."""
-    from spevae.data import exact_models as X
-    from spevae.evaluation.cases import Truth
-    from spevae.physics import SpectralQuadrature
+    from poleflow.data import exact_models as X
+    from poleflow.evaluation.cases import Truth
+    from poleflow.physics import SpectralQuadrature
     quad = SpectralQuadrature.for_beta(beta)
     x = torch.linspace(0.0, 1.0, int(round(beta / J.DTAU)) + 1)
     rng = torch.Generator().manual_seed(2027)
@@ -125,10 +125,10 @@ def score(rep, item, windows, truth_w, gmin_trained):
 
 
 def run(out, flow_path, beta, noise, extra):
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.models.flow import load_flow
-    from spevae.posterior import DEFAULT_WINDOWS, continue_posterior
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior
     flow = load_flow(flow_path).eval()
     items = J.make_truths(beta) + extra_discrete(beta, extra)
     gphys = flow.coords.gamma_min / beta               # trained width floor, physical units

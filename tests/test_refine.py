@@ -14,16 +14,16 @@ import numpy as np
 import pytest
 import torch
 
-from spevae import (
+from poleflow import (
     RefineConfig,
     load_checkpoint,
     load_model,
     refine_latent,
     save_model,
 )
-from spevae.data import from_bins
-from spevae.models import SPEVAE
-from spevae.metrics import spectral_report
+from poleflow.data import from_bins
+from poleflow.models import SPEVAE
+from poleflow.metrics import spectral_report
 
 BETA = 10.0
 OMEGA = np.linspace(-10, 10, 801)
@@ -73,7 +73,7 @@ def test_save_load_roundtrip(tmp_path):
 
     ck = load_checkpoint(path)
     assert ck["meta"]["note"] == "hello"
-    assert ck["format"] == 1 and "spevae_version" in ck
+    assert ck["format"] == 1 and "poleflow_version" in ck
 
 
 def test_loaded_model_reproduces_predictions(tmp_path):
@@ -238,10 +238,10 @@ def test_z_descend_beats_the_mean_readout():
     """The latent-landscape result as a regression test: descending
     chi^2(decode(z)) must land far below the posterior-mean readout."""
     import torch
-    from spevae import load_model
-    from spevae.refine import z_descend
-    from spevae.physics.poles import PoleSet
-    from spevae.physics.forward import SpectralQuadrature, PoleGreens
+    from poleflow import load_model
+    from poleflow.refine import z_descend
+    from poleflow.physics.poles import PoleSet
+    from poleflow.physics.forward import SpectralQuadrature, PoleGreens
     if not os.path.exists("out/step1/s1_metric.pt"):
         pytest.skip("reference checkpoint not present")
     model = load_model("out/step1/s1_metric.pt")
@@ -284,10 +284,10 @@ def test_least_squares_refinement_recovers_a_decodable_spectrum():
 def test_least_squares_z_descend_is_not_worse_than_adam():
     """Same objective, same start: the least-squares solver may not end at a
     worse MAP objective than 400 Adam steps (regression test on a checkpoint)."""
-    from spevae import load_model
-    from spevae.refine import z_descend
-    from spevae.physics.poles import PoleSet
-    from spevae.physics.forward import SpectralQuadrature, PoleGreens
+    from poleflow import load_model
+    from poleflow.refine import z_descend
+    from poleflow.physics.poles import PoleSet
+    from poleflow.physics.forward import SpectralQuadrature, PoleGreens
     path = "out/step1/s1_metric.pt"
     if not os.path.exists(path):
         pytest.skip("reference checkpoint not present")
@@ -311,10 +311,10 @@ def test_manifold_refit_dial_behaves():
     """weight -> 0 approaches the free refit's chi2; large weight stays
     near the anchor; moderate weight sits between on both axes."""
     import torch
-    from spevae import load_model
-    from spevae.refine import z_descend, manifold_refit
-    from spevae.physics.poles import PoleSet
-    from spevae.physics.forward import SpectralQuadrature, PoleGreens
+    from poleflow import load_model
+    from poleflow.refine import z_descend, manifold_refit
+    from poleflow.physics.poles import PoleSet
+    from poleflow.physics.forward import SpectralQuadrature, PoleGreens
     if not os.path.exists("out/step1/s1_metric.pt"):
         pytest.skip("reference checkpoint not present")
     model = load_model("out/step1/s1_metric.pt")
@@ -351,8 +351,8 @@ def test_prepare_inference_enforces_the_grid_convention():
     and the two must NOT silently be the same object on data with excluded
     slices (the 80/81 regression)."""
     import torch
-    from spevae.data.real import MeasuredGreens
-    from spevae.refine import prepare_inference
+    from poleflow.data.real import MeasuredGreens
+    from poleflow.refine import prepare_inference
     torch.manual_seed(0)
     L, N, beta = 41, 60, 4.0
     tau = torch.linspace(0, beta, L, dtype=torch.float64)

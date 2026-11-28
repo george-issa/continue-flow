@@ -37,8 +37,8 @@ TOL = 1e-5            # the linear programs are solved to about 1e-7; brackets a
 
 
 def run(out, ref_path, k, n):
-    from spevae.evaluation import cases as C
-    from spevae.posterior import DEFAULT_WINDOWS, prior_free_bounds
+    from poleflow.evaluation import cases as C
+    from poleflow.posterior import DEFAULT_WINDOWS, prior_free_bounds
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     ref = json.load(open(ref_path))

@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 import matplotlib
 matplotlib.use("Agg")
 
-from spevae.plotting import parse_training_log, plot_training
+from poleflow.plotting import parse_training_log, plot_training
 
 
 def main() -> None:

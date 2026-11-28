@@ -3,13 +3,13 @@ whitened chi^2 with the manifold penalty as a continuous prior force."""
 import sys, json, torch
 sys.path.insert(0, "src")
 import numpy as np
-from spevae import load_model
-from spevae.refine import z_descend, refine_latent, RefineConfig, manifold_refit
-from spevae.physics.poles import PoleSet
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.losses import spectral_w1
-from spevae.data.noise import NoiseModel, sample_correlated_noise
-from spevae.data.readers import read_gissa_cube
+from poleflow import load_model
+from poleflow.refine import z_descend, refine_latent, RefineConfig, manifold_refit
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.losses import spectral_w1
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
+from poleflow.data.readers import read_gissa_cube
 
 beta = 8.0
 quad = SpectralQuadrature.for_beta(beta)
@@ -75,7 +75,7 @@ rr = refine_latent(model, mg, RefineConfig(cov_method="structured",
 with torch.no_grad():
     _, _, norm = model.encode(mg.mean.unsqueeze(0).float(), mg.x.float(), beta,
                               sigma=mg.sigma_encoder.unsqueeze(0).float())
-from spevae.physics.consolidate import rank_scan
+from poleflow.physics.consolidate import rank_scan
 G_h, x_h, s_h, isr_h = mg.mean[sl], mg.x[sl], mg.sigma_mean[sl], cov["inv_sqrt_R"]
 case = dict(name="Holstein", truth_A=None,
             zd=dict(chi2=rr.chi2, w1=None,

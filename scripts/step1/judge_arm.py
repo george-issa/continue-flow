@@ -1,18 +1,18 @@
 """Step-1 judge: frozen streams + full-pipeline probes for one checkpoint."""
 import sys, json, torch
 sys.path.insert(0, "src")
-from spevae import load_model
-from spevae.physics.poles import PoleSet
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.physics.consolidate import rank_scan
-from spevae.physics.templates import (TemplateFit, fit_ladder, ladder_starts,
+from poleflow import load_model
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.physics.consolidate import rank_scan
+from poleflow.physics.templates import (TemplateFit, fit_ladder, ladder_starts,
                                       fit_peaks, peak_starts, fit_edged_band,
                                       select_model)
-from spevae.losses import spectral_w1
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.data.synthetic import SyntheticGenerator
-from spevae.training import evaluate
-from spevae.data.noise import NoiseModel, sample_correlated_noise
+from poleflow.losses import spectral_w1
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.data.synthetic import SyntheticGenerator
+from poleflow.training import evaluate
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
 
 ckpt = sys.argv[1]
 model = load_model(ckpt)

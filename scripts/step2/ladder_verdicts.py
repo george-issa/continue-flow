@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from spevae.data.label_bank import LabelBank
-from spevae.physics import ladder_verdict
+from poleflow.data.label_bank import LabelBank
+from poleflow.physics import ladder_verdict
 
 plt.rcParams.update({"font.size": 8.5, "axes.titlesize": 9,
                      "axes.labelsize": 9, "axes.grid": True,
@@ -57,10 +57,10 @@ axes[0].set_ylabel(r"whitened $\chi^2$ per dof")
 # concludes".
 import math
 
-from spevae.data.label_bank import (GAMMA_MIN, SmoothTruth, _aaa_seed_sets,
+from poleflow.data.label_bank import (GAMMA_MIN, SmoothTruth, _aaa_seed_sets,
                                     _polish, _rel_resid, _seed_cfg,
                                     _split_heaviest)
-from spevae.physics import PoleSet
+from poleflow.physics import PoleSet
 
 NOISE_FLOOR = 3e-5
 beta = 8.0

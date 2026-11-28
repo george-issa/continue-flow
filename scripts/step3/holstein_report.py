@@ -36,13 +36,13 @@ def window_weight(A, lo, hi):
 
 
 def main():
-    from spevae import load_model
-    from spevae.benchmark import run_maxent
-    from spevae.evaluation import cases as C
-    from spevae.models.flow import load_flow
-    from spevae.physics.poles import PoleSet
-    from spevae.posterior import continue_posterior
-    from spevae.refine import RefineConfig, refine_latent
+    from poleflow import load_model
+    from poleflow.benchmark import run_maxent
+    from poleflow.evaluation import cases as C
+    from poleflow.models.flow import load_flow
+    from poleflow.physics.poles import PoleSet
+    from poleflow.posterior import continue_posterior
+    from poleflow.refine import RefineConfig, refine_latent
 
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)

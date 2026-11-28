@@ -16,7 +16,7 @@ sys.path.insert(0, "src")
 
 import numpy as np
 
-from spevae.data.label_bank import LabelBank
+from poleflow.data.label_bank import LabelBank
 
 GAP_MAX = 3e-5
 

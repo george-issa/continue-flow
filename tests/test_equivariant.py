@@ -10,13 +10,13 @@ does not map onto themselves.
 import pytest
 import torch
 
-from spevae.models import SPEVAE
-from spevae.models.equivariant import (MirrorSymmetrized, mirror_poles,
+from poleflow.models import SPEVAE
+from poleflow.models.equivariant import (MirrorSymmetrized, mirror_poles,
                                        reflect_tau)
-from spevae.physics import SpectralQuadrature
-from spevae.physics.forward import PoleGreens
-from spevae.physics.poles import PoleSet
-from spevae.refine import z_descend
+from poleflow.physics import SpectralQuadrature
+from poleflow.physics.forward import PoleGreens
+from poleflow.physics.poles import PoleSet
+from poleflow.refine import z_descend
 
 BETA = 8.0
 

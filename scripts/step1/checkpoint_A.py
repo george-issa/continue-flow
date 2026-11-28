@@ -1,12 +1,12 @@
 """Real-data checkpoint A: beta=8 Holstein cell, full pipeline, arm-C model."""
 import sys, json, time, torch
 sys.path.insert(0, "src")
-from spevae import load_model
-from spevae.data.readers import read_gissa_cube
-from spevae.physics.forward import SpectralQuadrature
-from spevae.physics.consolidate import rank_scan
-from spevae.refine import RefineConfig, refine_latent
-from spevae.physics.templates import (TemplateFit, fit_ladder, ladder_starts,
+from poleflow import load_model
+from poleflow.data.readers import read_gissa_cube
+from poleflow.physics.forward import SpectralQuadrature
+from poleflow.physics.consolidate import rank_scan
+from poleflow.refine import RefineConfig, refine_latent
+from poleflow.physics.templates import (TemplateFit, fit_ladder, ladder_starts,
                                       fit_peaks, peak_starts, fit_edged_band,
                                       fit_mirrored_peaks, select_model)
 

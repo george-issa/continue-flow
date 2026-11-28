@@ -32,8 +32,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-import spevae.data.pole_prior as pp
-from spevae.physics.positivity import certify
+import poleflow.data.pole_prior as pp
+from poleflow.physics.positivity import certify
 
 plt.rcParams.update({"font.size": 8.5, "axes.titlesize": 9,
                      "axes.labelsize": 9, "axes.grid": True,

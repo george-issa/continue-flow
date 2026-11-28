@@ -14,9 +14,9 @@ from pathlib import Path
 
 sys.path.insert(0, "src")
 
-from spevae import load_model
-from spevae.data.readers import read_gissa_cube
-from spevae.refine import RefineConfig, refine_latent
+from poleflow import load_model
+from poleflow.data.readers import read_gissa_cube
+from poleflow.refine import RefineConfig, refine_latent
 
 CUBE = ("/Users/gissa/Documents/AC/SPE-AC-VAE-old/Data/datasets/real/"
         "gIssa/for_george_ac.jld2")

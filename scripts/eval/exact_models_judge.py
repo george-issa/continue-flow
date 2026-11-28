@@ -1,6 +1,6 @@
 """Known-answer judge: exactly solvable models through the current pipeline.
 
-Truths come from `spevae.data.exact_models` -- lattice Green's functions with
+Truths come from `poleflow.data.exact_models` -- lattice Green's functions with
 a lifetime (continuum) and exactly diagonalised finite models (delta spectra,
 G(tau) in closed form).  None of them is in any current checkpoint's training
 set.  Each gets the suite's noise model (correlated, xi = 0.1) on a
@@ -64,9 +64,9 @@ def a_phys(ps, beta):
 
 
 def make_truths(beta):
-    from spevae.data import exact_models as X
-    from spevae.evaluation.cases import Truth
-    from spevae.physics import PoleGreens, SpectralQuadrature
+    from poleflow.data import exact_models as X
+    from poleflow.evaluation.cases import Truth
+    from poleflow.physics import PoleGreens, SpectralQuadrature
     quad = SpectralQuadrature.for_beta(beta)
     x = torch.linspace(0.0, 1.0, int(round(beta / DTAU)) + 1)
     K = PoleGreens(quad).kernel_matrix(x)
@@ -93,10 +93,10 @@ def make_truths(beta):
 
 
 def run(flow, vae, noise, beta, lam=1.0, seed=None):
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.models.flow import refine_samples
-    from spevae.posterior import band_levels
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.models.flow import refine_samples
+    from poleflow.posterior import band_levels
     table = getattr(flow, "meta", {}).get("band_calibration")
     rows = []
     for k, item in enumerate(make_truths(beta)):
@@ -209,8 +209,8 @@ def fig(rows, kind, path, noise, beta, trained_on_them=False, left_out=()):
 
 
 def main():
-    from spevae import load_model
-    from spevae.models.flow import load_flow
+    from poleflow import load_model
+    from poleflow.models.flow import load_flow
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     noise = float(sys.argv[4]) if len(sys.argv) > 4 else 1e-3

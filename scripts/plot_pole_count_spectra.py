@@ -28,9 +28,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from benchmark import synthetic_case  # noqa: E402  (scripts/benchmark.py)
-from spevae import load_model  # noqa: E402
-from spevae.data import read_gissa_cube, read_text_bins  # noqa: E402
-from spevae.paths import data_path  # noqa: E402
+from poleflow import load_model  # noqa: E402
+from poleflow.data import read_gissa_cube, read_text_bins  # noqa: E402
+from poleflow.paths import data_path  # noqa: E402
 
 COLOURS = ["#0072B2", "#D55E00", "#009E73", "#CC79A7"]
 

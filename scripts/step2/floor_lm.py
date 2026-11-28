@@ -36,9 +36,9 @@ KW = dict(cov_method="structured", min_eigenvalue=1e-10)
 
 
 def judge(tag, path):
-    from spevae import load_model
-    from spevae.evaluation.cases import holstein_cell
-    from spevae.refine import RefineConfig, refine_latent
+    from poleflow import load_model
+    from poleflow.evaluation.cases import holstein_cell
+    from poleflow.refine import RefineConfig, refine_latent
     mg = holstein_cell()
     m = load_model(path)
     out = {"tag": tag, "path": path}

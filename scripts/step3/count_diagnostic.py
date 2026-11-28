@@ -41,10 +41,10 @@ GROUPS = ("all", "right", "near", "more")
 
 
 def run(flow_path, bank, out, shard, nshards):
-    from spevae.data.pole_prior import PolePriorGenerator
-    from spevae.models.flow import load_flow
-    from spevae.physics.poles import PoleSet
-    from spevae.posterior import DEFAULT_WINDOWS, continue_posterior
+    from poleflow.data.pole_prior import PolePriorGenerator
+    from poleflow.models.flow import load_flow
+    from poleflow.physics.poles import PoleSet
+    from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior
 
     torch.set_num_threads(4)
     flow = load_flow(flow_path).eval()

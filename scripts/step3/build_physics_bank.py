@@ -43,7 +43,7 @@ _QUAD = {}
 
 def _quad(beta):
     if beta not in _QUAD:
-        from spevae.data.pole_prior import PolePriorGenerator
+        from poleflow.data.pole_prior import PolePriorGenerator
         if "gen" not in _QUAD:
             _QUAD["gen"] = PolePriorGenerator(dtype=torch.float64)
         _QUAD[beta] = _QUAD["gen"].quadrature(beta)
@@ -55,8 +55,8 @@ def entry(job):
     import warnings
     warnings.filterwarnings("ignore")
     torch.set_num_threads(1)
-    from spevae.data.label_bank import extract_smooth_label
-    from spevae.physics import PoleGreens, PoleSet
+    from poleflow.data.label_bank import extract_smooth_label
+    from poleflow.physics import PoleGreens, PoleSet
     truth, P_max, mode = job
     t0 = time.time()
     lab = extract_smooth_label(truth, P_max=P_max, residue_mode=mode)
@@ -68,7 +68,7 @@ def entry(job):
     K = fwd.kernel_matrix(x)
     lines = None
     if hasattr(truth, "energies"):                  # an exact line spectrum
-        from spevae.data.pole_prior import lines_on_nodes
+        from poleflow.data.pole_prior import lines_on_nodes
         w = truth.weights / truth.weights.sum()
         lines = (torch.tensor(truth.energies, dtype=torch.float64), torch.tensor(w, dtype=torch.float64))
         A = lines_on_nodes(*lines, beta, quad)
@@ -86,7 +86,7 @@ def entry(job):
 
 def merge(base_path, add, add_nodes, add_lines, out_path):
     """Append the bank `add` (with its node spectra and lines) to the trusted bank at `base_path`."""
-    from spevae.data.label_bank import LabelBank
+    from poleflow.data.label_bank import LabelBank
     base = LabelBank.load(base_path)
     if base.P_max != add.P_max:
         raise SystemExit(f"P_max differs: {base.P_max} and {add.P_max}")
@@ -116,8 +116,8 @@ def merge(base_path, add, add_nodes, add_lines, out_path):
 
 
 def main():
-    from spevae.data.exact_models import EXACT_CONTINUUM
-    from spevae.data.label_bank import SMOOTH_FAMILIES, LabelBank, draw_bank_truths
+    from poleflow.data.exact_models import EXACT_CONTINUUM
+    from poleflow.data.label_bank import SMOOTH_FAMILIES, LabelBank, draw_bank_truths
 
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", type=Path, default=Path("out/step3/bank"))

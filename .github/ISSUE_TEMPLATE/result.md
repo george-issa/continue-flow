@@ -5,7 +5,7 @@ about: A spectrum, an interval or a warning that you do not trust
 
 **What you ran**
 
-The command or the Python call, and the output of `spevae --version`.
+The command or the Python call, and the output of `poleflow --version`.
 
 **The data**
 

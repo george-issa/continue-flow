@@ -68,7 +68,7 @@ def weights(rng, n):
 
 def draw_case(family, rng, k):
     """One random spectrum of a family, as a suite case."""
-    from spevae.evaluation.cases import Case, PoleSpec, SmoothSpec
+    from poleflow.evaluation.cases import Case, PoleSpec, SmoothSpec
     n = int(family[0]) if family[0].isdigit() else None
     if "Lorentzian" in family:
         spec = PoleSpec(tup(centres(rng, n, 0.8)), tup(rng.uniform(0.2, 1.0, n)), tup(weights(rng, n)), None)
@@ -81,7 +81,7 @@ def draw_case(family, rng, k):
             n = int(rng.integers(3, 9))
             spec = PoleSpec(tup(rng.uniform(-3.5, 3.5, n)), tup(rng.uniform(0.2, 0.9, n)),
                             tup(weights(rng, n)), tup(rng.uniform(-0.4, 0.4, n)))
-            from spevae.evaluation.cases import truth_on_grid
+            from poleflow.evaluation.cases import truth_on_grid
             A = truth_on_grid(Case("try", spec), SHOW, 8.0)
             if A.min() >= -1e-4 * A.max():
                 break
@@ -116,7 +116,7 @@ def exact_windows(item, windows):
 
 
 def items(beta, per):
-    from spevae.evaluation import cases as C
+    from poleflow.evaluation import cases as C
     out = []
     ntau = int(round(beta / J.DTAU))
     for fi, family in enumerate(FAMILIES):
@@ -133,10 +133,10 @@ def items(beta, per):
 
 
 def run(out, flow_path, beta, noise, per):
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.models.flow import load_flow
-    from spevae.posterior import DEFAULT_WINDOWS, continue_posterior
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(flow_path).eval()
@@ -192,9 +192,9 @@ def window_error(rows):
 
 def backfill(out):
     """MaxEnt's window weights for result files written before they were stored (the data are redrawn)."""
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.posterior import DEFAULT_WINDOWS
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.posterior import DEFAULT_WINDOWS
     for path in sorted(Path(out).glob("basic_b*_n*.json")):
         d = json.load(open(path))
         if all("maxent_windows" in r for r in d["rows"]):

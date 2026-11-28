@@ -13,9 +13,9 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.data import MeasuredGreens, from_bins, read_holstein_cube
-from spevae.paths import data_path
-from spevae.physics import PoleGreens, PoleSet, SpectralQuadrature
+from poleflow.data import MeasuredGreens, from_bins, read_holstein_cube
+from poleflow.paths import data_path
+from poleflow.physics import PoleGreens, PoleSet, SpectralQuadrature
 
 CUBE = str(data_path("datasets", "real", "george_325.jld2"))
 have_cube = os.path.exists(CUBE)
@@ -175,7 +175,7 @@ def test_ph_symmetric_pinned_slices_do_not_poison_chi2():
     assert cov["inv_sqrt_R"].shape == (sl.numel(), sl.numel())
     assert cov["n_independent"] == sl.numel()
 
-    from spevae.losses import chi2, negativity_stencil_weights
+    from poleflow.losses import chi2, negativity_stencil_weights
     G_pred = mg.mean.unsqueeze(0) + 1e-4      # imperfect but sane fit
     c = float(chi2(G_pred, mg.mean.unsqueeze(0), mg.sigma_mean.unsqueeze(0),
                    inv_sqrt_R=cov["inv_sqrt_R"], slices=cov["slices"]))
@@ -197,7 +197,7 @@ def test_structured_shrinkage_beats_lw_on_exp_correlated_bins():
     """Bins with a known exp-kernel correlation: the structured target should
     shrink hard (rho >> LW's) and calibrate chi2_target much nearer 1."""
     import torch
-    from spevae.data.noise import (ledoit_wolf_correlation,
+    from poleflow.data.noise import (ledoit_wolf_correlation,
                                    structured_shrunk_correlation, chi2_target)
     torch.manual_seed(0)
     L, N, xi_true = 60, 240, 0.8
@@ -221,7 +221,7 @@ def test_autocorrelation_report_on_ar1_bins():
     """AR(1) bins with known correlation time: g must come back right, and
     independent bins must come back g ~ 1."""
     import math, torch
-    from spevae.data.real import autocorrelation_report
+    from poleflow.data.real import autocorrelation_report
     torch.manual_seed(0)
     N, L, phi = 2000, 12, 0.7          # tau_int = (1+phi)/(2(1-phi)) ~ 2.83, g ~ 5.67
     base = torch.zeros(N)

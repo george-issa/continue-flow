@@ -3,12 +3,12 @@ ladder probes. Expectation: counts lock in, then parameters converge toward
 the unique zero-noise pole set."""
 import sys, json, torch
 sys.path.insert(0, "src")
-from spevae import load_model
-from spevae.physics.poles import PoleSet
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.physics.consolidate import rank_scan
-from spevae.losses import spectral_w1, spectral_l2
-from spevae.data.noise import NoiseModel, sample_correlated_noise
+from poleflow import load_model
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.physics.consolidate import rank_scan
+from poleflow.losses import spectral_w1, spectral_l2
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
 
 beta, ntau = 8.0, 64
 def ladder(e0, Om, m, g, d):

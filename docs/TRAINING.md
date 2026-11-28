@@ -292,7 +292,7 @@ gates.
 
 **Foundation-model track** (adopted 2026-11-23, user direction: keep it
 active alongside the stepwise protocol; every item is an arm judged by
-`spevae eval`).  The information limit is irreducible, but the measured
+`poleflow eval`).  The information limit is irreducible, but the measured
 gaps are model-limited (Holstein manifold floor 3.8 vs target 0.175;
 amortized χ² 10²–10³; best-of-64 posterior samples fail to cover
 balanced pairs), and those are what the ideas below target.
@@ -304,11 +304,11 @@ balanced pairs), and those are what the ideas below target.
 | data diversity over parameters | step-2 data arm (smooth label-bank truths) | running | physics-sourced corpus: small-cluster ED (exact pole labels), DMFT, exactly solvable models |
 | scaling curves | latent width 24/32/48 factorial in the step-2 screen | running | network-size ladder, on the generative model where capacity matters more |
 | test-time compute + verifier | z-descent, anchored rank scan, LR count test, positivity certificate (~60 s per dataset) | in place | best-of-N / guided sampling once a generative prior exists |
-| fine-tune on real data vs the likelihood | `spevae finetune` (encoder only) | exists, unused in judging | judge it on the Holstein cell |
+| fine-tune on real data vs the likelihood | `poleflow finetune` (encoder only) | exists, unused in judging | judge it on the Holstein cell |
 | breadth across kernels | fermionic G(τ) only | not started | bosonic / conductivity kernels through the same decoder (forward-map swap) |
 
 **Step-2 data arm, 6k screen** (*measured*, 2026-11-23;
-`scripts/step2/data_arm_screen.sh`, judged by `spevae eval --tier screen`,
+`scripts/step2/data_arm_screen.sh`, judged by `poleflow eval --tier screen`,
 `out/eval/step2_screen6k/`).  Bank: v1-protocol labels at β = 8, 1024
 truths per family (seed 2), filtered to data gap < 3e-5 (5088 of 5120 kept;
 `scripts/step2/filter_bank.py`); every kept label reachable by the M1
@@ -322,7 +322,7 @@ pseudogap 0.28 → 0.22), worse on 13–16 of 18 pole-closed cells.  (iii)
 z-descent 3000: D24 better on 7 of 10 smooth cells, none worse; even on
 pole-closed (8 better / 6 worse, mostly inside the control's seed spread);
 the smooth gap to MaxEnt narrows (gapped 5.4× → 2.6×, gauss 4.6× → 1.8×,
-pseudogap 3.8× → 2.3×) and spevae now beats MaxEnt on semicircle and box at
+pseudogap 3.8× → 2.3×) and poleflow now beats MaxEnt on semicircle and box at
 1e-3 (2.2–2.3×).  Latent factorial: 24 wins (best streams, smooth tally,
 Holstein MAP 0.176); AU stays at cap in every arm.  **Promoted: D24.**
 (iv) **THE gate is training-length dependent**: at 6k every model, control
@@ -351,7 +351,7 @@ the cosine schedule), which the EMA final averages out for D24 but not for
 the control.  This refines the 6k reading: the control's real-data fit is
 unstable along training, and the smooth data stabilises it, rather than
 training length narrowing the manifold monotonically.
-**Full scorecard** (`spevae eval --tier full`, `out/eval/step2_60k/`):
+**Full scorecard** (`poleflow eval --tier full`, `out/eval/step2_60k/`):
 streams D24 / ctrl60 / M1 — pole 0.189 / 0.218 / 0.230 (D24 now best on
 the pole stream too; at 6k it trailed), canary 0.315 / 0.466 / 0.504.
 Versus ctrl60, D24 is better on all 10 smooth cells under every method;
@@ -467,7 +467,7 @@ distribution** (`out/flow/str_F60k_redraw/final.json`; 96 held-out draws ×
 at 1e-4 (minimum 0.60/0.72), χ² 0.98/1.17.  Holstein: χ²/target median
 1.64 (q05 0.94, q95 3.9) — redrawn samples each fit a different noise
 realisation, so their χ² against the one measured mean sits above the
-target by construction.  The first spevae output with tested, calibrated
+target by construction.  The first poleflow output with tested, calibrated
 error bars.  [*Superseded 2026-11-24*: on 1000 truths at 40 noise levels,
 with a converged solver, the refined posterior is conservative rather than
 calibrated — 50% intervals cover 60%, 90% cover 94% — and the Holstein
@@ -510,7 +510,7 @@ samples, redrawn targets and objective (16 truths × 16 samples per level):
 at noise 3e-5 Adam (3000 steps) ends at median χ² 5.25 with 72% of samples
 above 2, LM at 1.24 with 26%, posterior-mean W₁ 0.034 → 0.025; at 1e-4
 1.18 → 1.05, W₁ 0.076 → 0.054; equal at 1e-3; 11–14 s against 115–220 s.
-*Latent MAP*, `spevae eval --tier lm` against the banked `zd3000` rows (224
+*Latent MAP*, `poleflow eval --tier lm` against the banked `zd3000` rows (224
 paired runs per model, same cases and draws): W₁ geometric-mean ratio 0.92
 (D24), 0.86 (ctrl60), 0.90 (M1), better in 67–75% of runs, median χ²
 1.34 vs 1.42 (D24), median runtime 1.9 s vs 7.1 s; at noise 1e-4 D24
@@ -536,7 +536,7 @@ the fit under the model's own prior: from the encoder mean D24's MAP
 reaches the noise target while ctrl60 and M1 stop 47× and 21× above it —
 but the MAP landscape has several stationary points (D24 lands at 1.0–11.7×
 target over five starts, ctrl60 at 7.8–47×, M1 at 21–32×), so a single MAP
-number is a start-dependent quantity; quote the range.  `spevae eval` now
+number is a start-dependent quantity; quote the range.  `poleflow eval` now
 records both protocols and how each fit ended (docs/EVAL.md).
 (v) **Calibration on 1000 truths** (40 noise levels 3e-5–3e-2 × 25 truths
 × 32 samples, grids and correlations cycled; `stratified_lm.{json,png}`).
@@ -1087,7 +1087,7 @@ checkpoint carried forward, being the one with the full set of judges.
 
 (xxii) **Narrow lines in the report: the lowered floor as the fit's default,
 intervals that span both line shapes, and where the intervals still fail**
-(*measured*, 2026-11-25; `spevae.models.flow.LoweredFloor`,
+(*measured*, 2026-11-25; `poleflow.models.flow.LoweredFloor`,
 `continue_posterior(floor_factor="auto")`, `posterior.central_interval`,
 `scripts/step3/floor_option_judge.py`, `out/step3/floor_option/`).
 *What changed in the package.*  (a) `LoweredFloor` re-expresses the flow's
@@ -1581,7 +1581,7 @@ narrow, without a warning, on the dense line spectrum.
 
 (xxx) **A statement the user can make, "the spectrum is discrete": honest
 intervals on the line spectra the report cannot flag** (*measured*,
-2026-11-25; `continue_posterior(discrete=True)`, `spevae continue
+2026-11-25; `continue_posterior(discrete=True)`, `poleflow continue
 --discrete`, `scripts/step3/discrete_rules.py`, `discrete_option_judge.py`,
 `out/step3/discrete_rules_F3L_60k_s1/`,
 `out/step3/discrete_option_F3L_60k_s1/`, `scripts/dqmc/windows_figure.py`).
@@ -1849,7 +1849,7 @@ data do not contain.
 (xxxiv) **Input formats: bins that stop at β − Δτ are read, malformed files
 are refused with the reason** (2026-11-27; `data/real.py`, `cli.py`,
 `tests/test_inputs.py`).  Six versions of the dimer bins were given to
-`spevae continue` as a user might have them.  Before: a file that stops at
+`poleflow continue` as a user might have them.  Before: a file that stops at
 β − Δτ (the convention of many codes) was refused; a spin-summed G and a
 transposed file were refused with a message about the sign; a NaN crashed
 with a traceback; 8 bins gave a report that said "100% accepted" and "NO
@@ -2048,7 +2048,7 @@ table transfers to both ((xxvii), (xxxvii));
 the weight); ring of four sites 0.320 against 0.657, 4 of 7 windows (7 of 7
 with the statement); dimer at β = 2 0.413 against 0.350, 7 of 7 (with the
 statement 0.342, 7 of 7).
-The command a user runs exists since 2026-11-25: `spevae continue` gives
+The command a user runs exists since 2026-11-25: `poleflow continue` gives
 the posterior report for a flow checkpoint (`posterior.continue_measured`),
 and reproduces the dimer judge's report to the digit.  No checkpoint is
 published.
@@ -2687,7 +2687,7 @@ a campaign:
 Aggregates hide the failure that matters, so every eval stratifies per
 family; the release gate below is stated per family, not on the mean.
 
-**Since 2026-11-23 the judges run through `spevae eval`** (docs/EVAL.md):
+**Since 2026-11-23 the judges run through `poleflow eval`** (docs/EVAL.md):
 one case registry, one scorer for every method, MaxEnt and DEAC in every
 scorecard, 8 noise draws per case, hierarchical bootstrap intervals and
 paired comparisons. It reproduces the banked judges (204 of 212 checks;
@@ -2698,12 +2698,12 @@ the 2026-09-01 map judge banked in the previous environment).
 `out/eval/s1_vs_M1_full/`; the scan pipeline on the first draw pair only):
 
 - **Versus MaxEnt (exact noise covariance, flat default model)**, scan
-  pipeline: spevae's W₁ is 2–550× lower on all nine pole-closed cases at
+  pipeline: poleflow's W₁ is 2–550× lower on all nine pole-closed cases at
   both noise levels, every interval excluding 1 (minimal form 2.1–550×,
   full rendering 2.1–55×; Lorentzian pair 0.001 vs 0.49 at 1e-4). MaxEnt is
   better on the smooth truths — gapped pair 9.2× (1e-4) / 2.6× (1e-3),
   Gaussian pair 3.6× (1e-4), pseudogap 2.4× / 1.9×, semicircle 1.3× (1e-4);
-  box splits (MaxEnt 1.1× at 1e-4, spevae 1.3× at 1e-3). This is the step-2
+  box splits (MaxEnt 1.1× at 1e-4, poleflow 1.3× at 1e-3). This is the step-2
   target stated as a number: close the smooth gap to MaxEnt without
   giving up the pole-closed advantage.
 - **The M1 fano regression is a z-descent-stage effect.** Under zd3000
@@ -2718,8 +2718,8 @@ the 2026-09-01 map judge banked in the previous environment).
   1e-4 for both models; the inference pipeline (≈60 s per dataset for the
   scan) does the work. This amortization gap is the measured case for a
   stronger posterior model.
-- **Holstein**: every spevae scan output, MaxEnt (χ²/target 0.39) and DEAC
-  (0.96) fit the data within noise, yet spevae returns sharp phonon-ladder
+- **Holstein**: every poleflow scan output, MaxEnt (χ²/target 0.39) and DEAC
+  (0.96) fit the data within noise, yet poleflow returns sharp phonon-ladder
   peaks while MaxEnt and DEAC return broad humps. The data do not decide
   between them; the prior does. The training prior is therefore the
   quantity to get right for real data.

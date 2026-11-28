@@ -2,7 +2,7 @@
 
 Every spectrum of the known-answer judge (20 exact lattice spectra, 12 exactly
 diagonalised line spectra; `scripts/eval/exact_models_judge.py`) is given the
-judge's noise and continued with `spevae.posterior.continue_posterior` at its
+judge's noise and continued with `poleflow.posterior.continue_posterior` at its
 defaults -- the call a user makes -- and with MaxEnt on the same data.  The
 curves are stored, so the figures can be redrawn without recomputing.
 
@@ -11,7 +11,7 @@ curves are stored, so the figures can be redrawn without recomputing.
 
 `run` writes OUT/known_b<beta>_n<noise>.{json,npz}; with `stated` it continues
 the line spectra only, with the spectrum stated to be discrete
-(`discrete=True`, what `spevae continue --discrete` does), and writes
+(`discrete=True`, what `poleflow continue --discrete` does), and writes
 OUT/known_stated_b<beta>_n<noise>.{json,npz}.  `fig` draws every setting
 found in OUT into DEST as lattice_beta<beta>_errorbar<noise>.png,
 lines_beta<beta>_errorbar<noise>.png and
@@ -58,10 +58,10 @@ def half_range(item):
 
 
 def run(out, flow_path, beta, noise, samples, stated=False):
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.models.flow import load_flow
-    from spevae.posterior import continue_posterior
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import continue_posterior
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(flow_path).eval()

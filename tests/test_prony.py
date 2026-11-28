@@ -12,7 +12,7 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.physics import (
+from poleflow.physics import (
     PoleGreens,
     PoleSet,
     SpectralQuadrature,

@@ -8,7 +8,7 @@
 # recipe.  Controls: the M1 recipe at 6k, seeds 1 and 2, already trained
 # (out/step2/equiv_ctrl6k.pt, out/step2/conc/ctrl_s2_6k.pt).
 #
-# Judged afterwards with:  spevae eval --tier fast (+ floor) -- see TRAINING.md.
+# Judged afterwards with:  poleflow eval --tier fast (+ floor) -- see TRAINING.md.
 cd "$(dirname "$0")/../.."
 export PYTHONPATH=src OMP_NUM_THREADS=2
 OUT=out/step2/data_arm
@@ -19,7 +19,7 @@ FLAGS=(--preset fast --steps 6000 --beta-min 8 --beta-max 8 --data poles --pole-
        --pole-eps1 0.1 --seed 1 --device mps
        --smooth-bank $BANK --p-smooth 0.3)
 for L in 24 32 48; do
-  python -u -m spevae.cli pretrain $FLAGS --latent-dim $L --out $OUT/D${L}_6k.pt \
+  python -u -m poleflow.cli pretrain $FLAGS --latent-dim $L --out $OUT/D${L}_6k.pt \
       > $OUT/D${L}_6k.log 2>&1 &
 done
 wait

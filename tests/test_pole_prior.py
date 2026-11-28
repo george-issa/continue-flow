@@ -5,9 +5,9 @@ import math
 import pytest
 import torch
 
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.losses import sinkhorn_pole_loss
-from spevae.physics import PoleSet, certify
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.losses import sinkhorn_pole_loss
+from poleflow.physics import PoleSet, certify
 
 
 def gen(seed=3):
@@ -135,8 +135,8 @@ def test_stack_coherence_penalizes_spread_stacks():
 
 
 def test_mixed_generator_interleaves_and_freezes():
-    from spevae.data.pole_prior import MixedGenerator, PolePriorGenerator
-    from spevae.data.synthetic import SyntheticGenerator
+    from poleflow.data.pole_prior import MixedGenerator, PolePriorGenerator
+    from poleflow.data.synthetic import SyntheticGenerator
     mg = MixedGenerator(PolePriorGenerator(beta_range=(6.0, 10.0)),
                         SyntheticGenerator(beta_range=(6.0, 10.0)))
     mg.seed_scalars(4)
@@ -153,8 +153,8 @@ def test_mixed_generator_interleaves_and_freezes():
 
 
 def test_mixed_curriculum_schedule_and_frozen_eval():
-    from spevae.data.pole_prior import MixedGenerator, PolePriorGenerator
-    from spevae.data.synthetic import SyntheticGenerator
+    from poleflow.data.pole_prior import MixedGenerator, PolePriorGenerator
+    from poleflow.data.synthetic import SyntheticGenerator
     mg = MixedGenerator(PolePriorGenerator(beta_range=(6.0, 10.0)),
                         SyntheticGenerator(beta_range=(6.0, 10.0)),
                         p_pole=1.0, p_pole_final=0.0)

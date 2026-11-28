@@ -51,5 +51,5 @@ jobs:
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install dist/*.whl
           cd "$RUNNER_TEMP"
-          spevae --version
-          python -c "from spevae.evaluation import cases; cases.hubbard_dimer_cell(); cases.holstein_cell()"
+          poleflow --version
+          python -c "from poleflow.evaluation import cases; cases.hubbard_dimer_cell(); cases.holstein_cell()"

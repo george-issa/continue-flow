@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Three-way analytic-continuation benchmark: spevae vs MaxEnt vs SmoQyDEAC.
+"""Three-way analytic-continuation benchmark: poleflow vs MaxEnt vs SmoQyDEAC.
 
 Two modes:
 
@@ -13,7 +13,7 @@ survives contact with real noise.
 
 Examples
 --------
-    python scripts/benchmark.py --synthetic --no-spevae
+    python scripts/benchmark.py --synthetic --no-poleflow
     python scripts/benchmark.py --synthetic --checkpoint out/smoke6k.pt
     python scripts/benchmark.py --holstein 19 1 5 --checkpoint out/smoke6k.pt
     python scripts/benchmark.py --bins mybins.txt --beta 8.0 --figure cmp.png
@@ -32,16 +32,16 @@ import torch
 
 warnings.filterwarnings("ignore")
 
-from spevae.benchmark import (  # noqa: E402
+from poleflow.benchmark import (  # noqa: E402
     compare, deac_available, format_table, maxent_available,
-    run_deac, run_maxent, run_spevae,
+    run_deac, run_maxent, run_poleflow,
 )
-from spevae.data import from_bins, read_holstein_cube, read_text_bins  # noqa: E402
-from spevae.models import SPEVAE  # noqa: E402
-from spevae import RefineConfig, load_model as _load  # noqa: E402
-from spevae.physics import PoleGreens, PoleSet, SpectralQuadrature  # noqa: E402
+from poleflow.data import from_bins, read_holstein_cube, read_text_bins  # noqa: E402
+from poleflow.models import SPEVAE  # noqa: E402
+from poleflow import RefineConfig, load_model as _load  # noqa: E402
+from poleflow.physics import PoleGreens, PoleSet, SpectralQuadrature  # noqa: E402
 
-from spevae.paths import data_path  # noqa: E402
+from poleflow.paths import data_path  # noqa: E402
 
 CUBE = str(data_path("datasets", "real", "george_325.jld2"))
 
@@ -85,10 +85,10 @@ def main() -> None:
                     default=None, help="force negation (default: detect from the sum rule)")
     ap.add_argument("--no-sign-flip", dest="sign_flip", action="store_false",
                     help="force no negation")
-    ap.add_argument("--checkpoint", default=None, help="trained spevae weights")
-    ap.add_argument("--no-spevae", action="store_true")
+    ap.add_argument("--checkpoint", default=None, help="trained poleflow weights")
+    ap.add_argument("--no-poleflow", action="store_true")
     ap.add_argument("--refine", action="store_true",
-                    help="add a latent-refined spevae row")
+                    help="add a latent-refined poleflow row")
     ap.add_argument("--refine-steps", type=int, default=2000)
     ap.add_argument("--no-maxent", action="store_true")
     ap.add_argument("--no-deac", action="store_true")
@@ -129,18 +129,18 @@ def main() -> None:
     omega = np.linspace(-args.omega_max, args.omega_max, args.n_omega)
     results = []
 
-    if not args.no_spevae:
+    if not args.no_poleflow:
         if args.checkpoint is None:
-            print("[spevae ] skipped: no --checkpoint given")
+            print("[poleflow ] skipped: no --checkpoint given")
         else:
-            print(f"[spevae ] running ({args.checkpoint}) ...", flush=True)
+            print(f"[poleflow ] running ({args.checkpoint}) ...", flush=True)
             _m = load_model(args.checkpoint)
-            results.append(run_spevae(_m, mg, omega=omega, n_samples=200,
+            results.append(run_poleflow(_m, mg, omega=omega, n_samples=200,
                                       min_eigenvalue=args.min_eigenvalue))
             if args.refine:
                 print("[refine ] optimising z with the weights frozen ...",
                       flush=True)
-                results.append(run_spevae(
+                results.append(run_poleflow(
                     _m, mg, omega=omega, n_samples=0,
                     min_eigenvalue=args.min_eigenvalue,
                     refine=RefineConfig(steps=args.refine_steps,
@@ -157,7 +157,7 @@ def main() -> None:
     if not args.no_deac:
         if not deac_available():
             print("[deac   ] skipped: julia + SmoQyDEAC not reachable "
-                  "(set SPEVAE_JULIA_PROJECT)")
+                  "(set POLEFLOW_JULIA_PROJECT)")
         else:
             print(f"[deac   ] running ({args.deac_bins}x{args.deac_runs} runs, "
                   f"{args.deac_generations} generations) ...", flush=True)
@@ -176,7 +176,7 @@ def main() -> None:
         ws, A = mg.reference
         # The cube ships a SmoQyDEAC continuation. It is a *reference*, not
         # truth, so it enters as another row rather than as the answer.
-        from spevae.benchmark import ContinuationResult
+        from poleflow.benchmark import ContinuationResult
         ref = ContinuationResult(method="deac-ref", omega=ws.double().numpy(),
                                  A=A.double().numpy(),
                                  meta={"solver": "SmoQyDEAC shipped with the cube"})
@@ -196,8 +196,8 @@ def main() -> None:
     print(format_table(cmp))
 
     if args.figure:
-        from spevae.benchmark import plot_comparison
-        label = (mg.label or "spevae benchmark")
+        from poleflow.benchmark import plot_comparison
+        label = (mg.label or "poleflow benchmark")
         plot_comparison(results, mg=mg, truth=truth, title=label,
                         omega_range=(-args.omega_max, args.omega_max),
                         path=args.figure)

@@ -43,7 +43,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from spevae.posterior import BAND_TARGETS, band_levels, fit_band_table
+from poleflow.posterior import BAND_TARGETS, band_levels, fit_band_table
 
 NOISE_EDGES = (1e-4, 1e-3, 1e-2)
 BETA_EDGES = (2.5, 10.0)

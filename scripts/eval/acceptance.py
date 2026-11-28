@@ -1,4 +1,4 @@
-"""Reproduce the banked judge numbers with `spevae eval` (run from the repo root).
+"""Reproduce the banked judge numbers with `poleflow eval` (run from the repo root).
 
     python scripts/eval/acceptance.py [OUT_DIR] [WORKERS]
 """
@@ -7,7 +7,7 @@ from collections import Counter
 
 sys.path.insert(0, "src")
 
-from spevae.evaluation.acceptance import run_acceptance
+from poleflow.evaluation.acceptance import run_acceptance
 
 
 def main():

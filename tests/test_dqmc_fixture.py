@@ -4,7 +4,7 @@ import math
 
 import numpy as np
 
-from spevae.evaluation import cases as C
+from poleflow.evaluation import cases as C
 
 
 def test_dimer_fixture_agrees_with_the_exact_greens_function():

@@ -12,8 +12,8 @@ mkdir -p $OUT
 FLAGS=(--preset fast --steps 60000 --beta-min 8 --beta-max 8 --data poles --pole-metric width
        --residue-mode dispersive --prior-residue-mode dispersive --latent-dim 24
        --pole-eps1 0.1 --seed 1 --device mps --keep-snapshots)
-python -u -m spevae.cli pretrain $FLAGS --out $OUT/ctrl_60k.pt > $OUT/ctrl_60k.log 2>&1 &
-python -u -m spevae.cli pretrain $FLAGS --smooth-bank out/step2/bank_b8/label_bank_trusted.pt \
+python -u -m poleflow.cli pretrain $FLAGS --out $OUT/ctrl_60k.pt > $OUT/ctrl_60k.log 2>&1 &
+python -u -m poleflow.cli pretrain $FLAGS --smooth-bank out/step2/bank_b8/label_bank_trusted.pt \
     --p-smooth 0.3 --out $OUT/D24_60k.pt > $OUT/D24_60k.log 2>&1 &
 wait
 echo DATA_ARM_60K_FINISHED

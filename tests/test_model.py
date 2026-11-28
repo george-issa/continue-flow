@@ -10,14 +10,14 @@ import math
 import pytest
 import torch
 
-from spevae.models import (
+from poleflow.models import (
     DEFAULT_GAMMA_MIN,
     PoleConstraints,
     SPEVAE,
     active_units,
     spectral_norm_from_greens,
 )
-from spevae.physics import MATSUBARA_NU0, SpectralQuadrature
+from poleflow.physics import MATSUBARA_NU0, SpectralQuadrature
 
 DT = torch.float64
 OMEGA = torch.linspace(-8, 8, 801, dtype=DT)

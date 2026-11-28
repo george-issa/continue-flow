@@ -4,7 +4,7 @@ For every snapshot of each run: amortized chi2, MAP chi2 (z-descent 3000,
 prior anchor 1) and the manifold floor (prior released, 10k steps; the
 descent stops once chi2 reaches the target, so "floor = target" means "the
 decoder manifold reaches the noise level").  Torch pinned to 2 threads per
-worker, as in spevae eval.
+worker, as in poleflow eval.
 
     python scripts/step2/floor_curve.py out/step2/data_arm ctrl_60k D24_60k
 """
@@ -20,9 +20,9 @@ sys.path.insert(0, "src")
 def job(path):
     import torch
     torch.set_num_threads(2)
-    from spevae import load_model
-    from spevae.evaluation.cases import holstein_cell
-    from spevae.refine import RefineConfig, refine_latent
+    from poleflow import load_model
+    from poleflow.evaluation.cases import holstein_cell
+    from poleflow.refine import RefineConfig, refine_latent
     mg = holstein_cell()
     m = load_model(path)
     rr = refine_latent(m, mg, RefineConfig(cov_method="structured", min_eigenvalue=1e-10,

@@ -118,7 +118,7 @@ Left: measured minus exact G(tau) in units of the error bar. Middle: the reconst
 
 **hubbard_dimer_dqmc_stated_discrete.png**
 
-The same dimer bins with the spectrum stated to be discrete (`spevae continue --discrete`): the four lines are fitted as zero-width lines.
+The same dimer bins with the spectrum stated to be discrete (`poleflow continue --discrete`): the four lines are fitted as zero-width lines.
 
 As above; the posterior's lines are the blue bars, on the scale of the exact lines.
 
@@ -194,7 +194,7 @@ Top left: error over MaxEnt's on the same data (below 1 = better). Top right: on
 
 **discrete_statement.png**
 
-Exact line spectra again: what stating that the spectrum is discrete (`spevae continue --discrete`) does to the intervals. Many close lines look like a continuous band in the data, so the report cannot flag them itself; the statement is how the user tells it.
+Exact line spectra again: what stating that the spectrum is discrete (`poleflow continue --discrete`) does to the intervals. Many close lines look like a continuous band in the data, so the report cannot flag them itself; the statement is how the user tells it.
 
 Left: share of windows whose exact weight lies inside the stated intervals, without the statement (blue) and with it (green); dashes are nominal. Right: the width of the stated 90% interval as a share of the range the data alone allow. The last group is the cost of making the statement about a continuous spectrum. Made before zero-width lines were fitted: the line spectra the report does not flag, which this figure is about, are reported the same way now; the flagged ones are in zero_width_lines.png.
 

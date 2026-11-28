@@ -7,12 +7,12 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.models import SPEVAE
-from spevae.evaluation import cases as C
-from spevae.evaluation import methods as M
-from spevae.evaluation.stats import compare_models, summarize
-from spevae.physics import PoleGreens
-from spevae.physics.poles import PoleSet
+from poleflow.models import SPEVAE
+from poleflow.evaluation import cases as C
+from poleflow.evaluation import methods as M
+from poleflow.evaluation.stats import compare_models, summarize
+from poleflow.physics import PoleGreens
+from poleflow.physics.poles import PoleSet
 
 
 @pytest.fixture(scope="module")
@@ -148,8 +148,8 @@ def test_holstein_fixture_matches_pin():
 
 
 def test_run_suite_end_to_end(tmp_path, tiny_model):
-    from spevae.evaluation import run_suite, write_report
-    from spevae.io import save_model
+    from poleflow.evaluation import run_suite, write_report
+    from poleflow.io import save_model
     ck = str(tmp_path / "tiny.pt")
     save_model(tiny_model, ck)
     card = run_suite([("tiny", ck), ("tiny", ck)], tier="fast", workers=1,
@@ -167,7 +167,7 @@ def test_run_suite_end_to_end(tmp_path, tiny_model):
 
 def test_paired_interval_does_not_flag_two_agreeing_pairs():
     """Two pairs that agree in sign are not evidence; eight consistent ones are."""
-    from spevae.evaluation.stats import compare_pairs
+    from poleflow.evaluation.stats import compare_pairs
 
     def recs(ratios):
         out = []

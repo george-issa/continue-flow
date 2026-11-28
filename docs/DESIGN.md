@@ -96,7 +96,7 @@ This package keeps the asymmetry and closes the pathology from four sides:
    $\int\mathrm{ReLU}(-A)^2$ on the quadrature, and the complete-monotonicity
    penalties on $G, G'', G''''$ in data space (Stage 2);
 4. an **exact, grid-free certificate at inference**
-   (`spevae.physics.positivity`): $A \ge 0$ on all of $\mathbb{R}$ reduces to a
+   (`poleflow.physics.positivity`): $A \ge 0$ on all of $\mathbb{R}$ reduces to a
    real-root count of the degree-$2P{-}2$ numerator polynomial, decided from
    the pole parameters by a companion matrix; where $A$ does dip negative, the
    dip is located and its total weight integrated in closed form.  The verdict
@@ -376,7 +376,7 @@ timing runs: suppressing the spurious per-batch MPS `irfft` warning nearly
 *doubled* training throughput (832 s vs 1622 s for identical work) — the
 warning machinery and log I/O were a real cost, not just noise.
 
-**Stage 2 — per-dataset fine-tuning** (`spevae.training.finetune`) adapts the
+**Stage 2 — per-dataset fine-tuning** (`poleflow.training.finetune`) adapts the
 *weights* to one measured cell — its noise level, correlation structure and
 spectral family — with no ground truth: the self-supervision is the calibrated
 per-bin $\chi^2$, the free-bits KL, the consistency term applied to what bins
@@ -404,7 +404,7 @@ failure:
   charge violations in data space, where the complex-residue mode is otherwise
   free to buy $\chi^2$ with unphysical dips.
 
-**Stage 3 — per-input latent refinement** (`spevae.refine`) moves only $z$ with
+**Stage 3 — per-input latent refinement** (`poleflow.refine`) moves only $z$ with
 the weights frozen: the cheap, always-safe last mile for a single spectrum,
 stopping at the *calibrated* noise floor rather than at 1.  The three stages
 compose: pretrain once, fine-tune per dataset, refine per input.
@@ -480,7 +480,7 @@ $3\times10^{-2}$. Two consequences worth recording:
 ### Measured on real data — and it is worse than expected
 
 Reading one cell of the site-Holstein cube ($n=1.0$, $\Omega=1.0$, $\beta=10$;
-100 bins, 101 time slices) through `spevae.data.read_holstein_cube`:
+100 bins, 101 time slices) through `poleflow.data.read_holstein_cube`:
 
 ```
 sum rule  : G(0)+G(beta) = 1.000000   (conventions confirmed)
@@ -541,14 +541,14 @@ exactly the failure that matters.
 
 ## 8. Benchmarking against MaxEnt and SmoQyDEAC
 
-`spevae.benchmark` runs three solvers through one interface, one forward map for
+`poleflow.benchmark` runs three solvers through one interface, one forward map for
 scoring, and one set of metrics:
 
 | method | how | prior / regulariser | characteristic failure |
 |---|---|---|---|
 | **MaxEnt** | vendored [`ana_cont`][anacont] | default model + entropy | broadens sharp structure |
 | **SmoQyDEAC** | [`SmoQyDEAC.jl`][deac] via a Julia subprocess | none (stochastic search) | visibly rough spectra |
-| **spevae** | this package | learned training distribution | limited by that distribution |
+| **poleflow** | this package | learned training distribution | limited by that distribution |
 
 The three fail *differently*, which is the point. Two methods that share a bias
 agreeing tells you nothing; agreement across methods with unrelated failure modes
@@ -559,7 +559,7 @@ is real evidence that a feature is in the data rather than in a prior.
 All three define the same kernel — verified in `tests/test_benchmark.py`, not
 assumed:
 
-$$\underbrace{\frac{1}{e^{x\nu}+e^{(x-1)\nu}}}_{\text{spevae}}
+$$\underbrace{\frac{1}{e^{x\nu}+e^{(x-1)\nu}}}_{\text{poleflow}}
 =\underbrace{\frac{e^{-\tau\omega}}{1+e^{-\omega}}\bigg|_{\tau\to\tau/\beta,\;\omega\to\beta\omega}}_{\texttt{ana\_cont}}
 =\underbrace{\frac{1}{e^{\omega\tau}+e^{-\omega(\beta-\tau)}}}_{\texttt{SmoQyDEAC}}$$
 
@@ -579,7 +579,7 @@ same whitened covariance. Two consequences:
   For a grid solver that is correct — the grid *is* its answer. For a pole
   expansion it is not: the $1/\omega^2$ tail beyond the window lands almost
   entirely at $\tau\in\{0,\beta\}$ where $K\to1$, worth $\sim10^{-2}$ for broad
-  poles on a $\pm20$ grid. `spevae` therefore supplies its own exact
+  poles on a $\pm20$ grid. `poleflow` therefore supplies its own exact
   reconstruction rather than being charged for being untruncated.
 
 ### Peak counts need a resolution scale
@@ -594,24 +594,24 @@ answer and should not be hidden.
 ### Measured
 
 **Synthetic, two Lorentzians, known answer** ($\beta=10$, 800 bins, 81 slices;
-spevae = the 27-minute `fast`-preset checkpoint, complex residues, scored
+poleflow = the 27-minute `fast`-preset checkpoint, complex residues, scored
 through its own exact forward map):
 
 ```
 method           L2 rel     Linf       W1   peak dw   peak dh   chi2/target
-spevae           0.4978   0.2148   0.3187    0.0500    0.3393      4554
-spevae-refined   0.5586   0.3511   0.1589    0.1700    0.1350       197
+poleflow           0.4978   0.2148   0.3187    0.0500    0.3393      4554
+poleflow-refined   0.5586   0.3511   0.1589    0.1700    0.1350       197
 maxent           0.2184   0.1184   0.2363    0.0350    0.0921      17.5
 deac             0.3861   0.3706   0.3416    0.1100    0.0694      54.1
 ```
 
 All four rows agree on the structure (2 peaks, no gap, at resolution
 $\pi/\beta$). The division of labour: MaxEnt is smoothest and wins
-$L^2$/$L^\infty$; DEAC gets heights right; the amortised spevae pass (0.2 s)
+$L^2$/$L^\infty$; DEAC gets heights right; the amortised poleflow pass (0.2 s)
 places peaks well ($\Delta\omega = 0.05$) but underfits at this training
 budget, and **latent refinement takes the best $W_1$ of any method** (0.159)
 while pulling $\chi^2$/target from 4554 to 197. A note on bookkeeping: the
-previous edition of this table charged spevae through a truncating grid
+previous edition of this table charged poleflow through a truncating grid
 back-transform the package itself calls unfair; this one is scored through the
 exact forward map, like every number the benchmark now emits.
 
@@ -632,8 +632,8 @@ SmoQyDEAC reference (calibrated target 0.112):
 
 ```
 method            norm      min A       chi2   target    ratio
-spevae          1.0009  -3.51e-05    169.371   0.1116  1517.8
-spevae-refined  0.9999  -2.09e-05      0.155   0.1116     1.39
+poleflow          1.0009  -3.51e-05    169.371   0.1116  1517.8
+poleflow-refined  0.9999  -2.09e-05      0.155   0.1116     1.39
 maxent          0.9999  +1.71e-07      0.026   0.1116     0.23
 deac            1.0000  +6.49e-05      0.072   0.1116     0.64
 deac-ref        1.0000  +6.25e-05      0.109   0.1116     0.98
@@ -645,7 +645,7 @@ noise floor. Against the naive target of 1 it would have looked like a 9×
 predecessor project carried as an open blocker. This is independent confirmation
 that `chi2_target` is the right reference value and 1 is not.
 
-The two spevae rows are the amortised/refined split in action: a phonon cell
+The two poleflow rows are the amortised/refined split in action: a phonon cell
 is far from the fast checkpoint's sweet spot (ratio 1518 in 0.3 s), and latent
 refinement — weights frozen, prior intact — walks it to **1.39, essentially at
 the noise floor**, with $\min A$ at the $10^{-5}$ level and agreement with the
@@ -924,4 +924,4 @@ the reasons documented above.
   [SciPost Phys. Codebases **39** (2024)][deac].
 - J. Kaufmann and K. Held, *ana_cont: Python package for analytic
   continuation*, [Comput. Phys. Commun. **282**, 108519 (2023)][anacont].
-  Vendored under `src/spevae/_vendor/ana_cont` (MIT); see its `VENDORED.md`.
+  Vendored under `src/poleflow/_vendor/ana_cont` (MIT); see its `VENDORED.md`.

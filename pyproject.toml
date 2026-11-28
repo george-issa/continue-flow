@@ -3,7 +3,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "spevae"
+name = "poleflow"
 dynamic = ["version"]
 description = "Analytic continuation of imaginary-time Green's functions from quantum Monte Carlo to spectral functions, with tested error bars."
 readme = "README.md"
@@ -26,12 +26,12 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/george-issa/continue-flow"
-Issues = "https://github.com/george-issa/continue-flow/issues"
-Changelog = "https://github.com/george-issa/continue-flow/blob/main/CHANGELOG.md"
+Repository = "https://github.com/george-issa/poleflow"
+Issues = "https://github.com/george-issa/poleflow/issues"
+Changelog = "https://github.com/george-issa/poleflow/blob/main/CHANGELOG.md"
 
 [project.scripts]
-spevae = "spevae.cli:main"
+poleflow = "poleflow.cli:main"
 
 [project.optional-dependencies]
 plot = ["matplotlib"]
@@ -41,16 +41,16 @@ dev = ["pytest", "pytest-xdist", "matplotlib"]
 where = ["src"]
 
 [tool.setuptools.dynamic]
-version = { attr = "spevae.__version__" }
+version = { attr = "poleflow.__version__" }
 
 [tool.setuptools.package-data]
 # The maximum-entropy comparator is vendored (ana_cont is not on PyPI) and the
 # SmoQyDEAC comparator is driven by a Julia script; both must ship with the
 # package or the benchmark harness silently loses a baseline after `pip install`.
-"spevae._vendor.ana_cont" = ["LICENSE", "VENDORED.md"]
-"spevae.benchmark" = ["*.jl"]
+"poleflow._vendor.ana_cont" = ["LICENSE", "VENDORED.md"]
+"poleflow.benchmark" = ["*.jl"]
 # the two small DQMC data files the tests and the examples read
-"spevae.evaluation" = ["fixtures/*.npz"]
+"poleflow.evaluation" = ["fixtures/*.npz"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

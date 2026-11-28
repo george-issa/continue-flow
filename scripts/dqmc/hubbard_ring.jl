@@ -2,7 +2,7 @@
 #
 # L sites on a periodic chain, hopping t = 1, on-site U in the particle-hole
 # symmetric form, mu = 0 (half filling; no sign problem for even L).  The spectrum
-# is known by exact diagonalisation (`spevae.data.exact_models.hubbard_cluster`):
+# is known by exact diagonalisation (`poleflow.data.exact_models.hubbard_cluster`):
 # dozens of lines for L = 4, against four for the dimer of `hubbard_dimer.jl`, so
 # the binned local G(tau) this script writes is real Monte Carlo data of a dense
 # line spectrum whose continuation can be checked against the right answer.

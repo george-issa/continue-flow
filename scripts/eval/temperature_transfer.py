@@ -37,12 +37,12 @@ LAB = {"zdlm": "VAE + least-squares MAP (D24)", "flow": "refined flow posterior 
 
 
 def main():
-    from spevae import load_model
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.losses import spectral_w1
-    from spevae.models.flow import load_flow, refine_samples
-    from spevae.physics import PoleGreens
+    from poleflow import load_model
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.losses import spectral_w1
+    from poleflow.models.flow import load_flow, refine_samples
+    from poleflow.physics import PoleGreens
 
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)

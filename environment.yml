@@ -1,4 +1,4 @@
-name: spevae
+name: poleflow
 channels:
   - pytorch
   - conda-forge

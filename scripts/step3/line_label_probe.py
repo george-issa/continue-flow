@@ -47,8 +47,8 @@ def gm(v):
 
 
 def main():
-    from spevae.data.label_bank import extract_smooth_label
-    from spevae.physics import PoleGreens, PoleSet, SpectralQuadrature
+    from poleflow.data.label_bank import extract_smooth_label
+    from poleflow.physics import PoleGreens, PoleSet, SpectralQuadrature
     out, judged = Path(sys.argv[1]), Path(sys.argv[2])
     noise = float(sys.argv[3]) if len(sys.argv) > 3 else 1e-3
     out.mkdir(parents=True, exist_ok=True)

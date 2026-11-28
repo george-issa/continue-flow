@@ -7,8 +7,8 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.evaluation import cases as C
-from spevae.posterior import DEFAULT_WINDOWS, continue_posterior, prior_free_bounds
+from poleflow.evaluation import cases as C
+from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior, prior_free_bounds
 
 
 def _true_window_weights(truth, beta):
@@ -55,7 +55,7 @@ def test_prior_free_brackets_admit_weight_beyond_the_frequency_grid():
 
 
 def test_a_range_that_cannot_be_computed_is_reported_as_such(monkeypatch):
-    import spevae.posterior as P
+    import poleflow.posterior as P
     inst = C.draw(C.realize("lorentz pair"), 1e-3, 7)
     tr = inst.truth
     monkeypatch.setattr(P, "BOUNDS_TIME_LIMIT", 1e-9)                  # no program can finish
@@ -73,7 +73,7 @@ def test_posterior_report_on_the_reference_flow():
     path = "out/flow/F_60k.pt"
     if not os.path.exists(path):
         pytest.skip("reference flow checkpoint not present")
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     flow = load_flow(path).eval()
     inst = C.draw(C.realize("lorentz pair"), 1e-3, 7)
     rep = continue_posterior(flow, inst.G, inst.truth.x, 8.0, inst.sigma, inst.isr, n_samples=48,
@@ -93,7 +93,7 @@ def test_small_error_bars_draw_the_systematics_warning_unless_a_floor_is_set():
     path = "out/flow/F_60k.pt"
     if not os.path.exists(path):
         pytest.skip("reference flow checkpoint not present")
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     flow = load_flow(path).eval()
     inst = C.draw(C.realize("lorentz pair"), 5e-5, 7)
     kw = dict(n_samples=16, bounds=False, max_births=0, generator=torch.Generator().manual_seed(1))
@@ -109,7 +109,7 @@ def test_a_time_grid_outside_the_trained_range_draws_a_warning():
     path = "out/flow/F_60k.pt"
     if not os.path.exists(path):
         pytest.skip("reference flow checkpoint not present")
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     flow = load_flow(path).eval()
     inst = C.draw(C.realize("lorentz pair"), 1e-3, 7)
     n_tau = int(inst.G.shape[-1])
@@ -130,7 +130,7 @@ def test_a_time_grid_outside_the_trained_range_draws_a_warning():
 def test_band_table_recovers_a_known_overdispersion():
     """Samples twice as wide as the truth's distribution: the table finds the narrower level."""
     from statistics import NormalDist
-    from spevae.posterior import BAND_TARGETS, band_levels, fit_band_table
+    from poleflow.posterior import BAND_TARGETS, band_levels, fit_band_table
 
     rng = np.random.default_rng(0)
     n, S = 4000, 64
@@ -157,7 +157,7 @@ def test_a_band_table_narrows_the_window_intervals_and_nothing_else():
     path = "out/flow/F_60k.pt"
     if not os.path.exists(path):
         pytest.skip("reference flow checkpoint not present")
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     flow = load_flow(path).eval()
     inst = C.draw(C.realize("lorentz pair"), 1e-3, 7)
     table = {"targets": [0.5, 0.68, 0.9, 0.95], "noise_edges": [], "beta_edges": [],
@@ -182,7 +182,7 @@ def test_a_band_table_narrows_the_window_intervals_and_nothing_else():
 
 
 def test_weight_at_width_floor_counts_only_pinned_poles():
-    from spevae.posterior import weight_at_width_floor
+    from poleflow.posterior import weight_at_width_floor
     g0 = 0.1 * math.pi
     a = torch.tensor([[0.6, 0.4, 0.0], [0.2, 0.8, 0.0], [0.5, 0.5, 0.0]])
     gam = torch.tensor([[g0 * 1.01, 2.0, 1.0], [g0 * 1.2, 0.9, 1.0], [g0 * 3.0, g0 * 1.3, 1.0]])
@@ -195,7 +195,7 @@ def test_broad_spectra_do_not_draw_the_width_floor_warning():
     path = "out/flow/F_60k.pt"
     if not os.path.exists(path):
         pytest.skip("reference flow checkpoint not present")
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     flow = load_flow(path).eval()
     inst = C.draw(C.realize("semicircle"), 1e-3, 7)
     rep = continue_posterior(flow, inst.G, inst.truth.x, 8.0, inst.sigma, inst.isr, n_samples=32,
@@ -208,9 +208,9 @@ def test_auto_floor_refits_line_spectra_and_leaves_broad_ones_alone(monkeypatch)
     path = next((p for p in ("out/step3/F3_60k_s1.pt", "out/flow/F_60k.pt") if os.path.exists(p)), None)
     if path is None:
         pytest.skip("no flow checkpoint present")
-    import spevae.posterior as P
-    from spevae.models.flow import load_flow
-    from spevae.posterior import FLOOR_FACTOR
+    import poleflow.posterior as P
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import FLOOR_FACTOR
     # the route judged in TRAINING.md (xxii)-(xxx): narrow poles as Lorentzians of the lowered floor
     monkeypatch.setattr(P, "LINE_FIT", False)
     flow = load_flow(path).eval()
@@ -268,8 +268,8 @@ def test_narrow_lines_are_fitted_as_zero_width_lines(tmp_path, monkeypatch):
                  if os.path.exists(p)), None)
     if path is None:
         pytest.skip("no flow checkpoint present")
-    import spevae.posterior as P
-    from spevae.models.flow import load_flow
+    import poleflow.posterior as P
+    from poleflow.models.flow import load_flow
     flow = load_flow(path).eval()
     beta, S = 8.0, 32
     # two exact lines at omega = +-1 (a Hubbard atom, U = 2)
@@ -342,7 +342,7 @@ def test_stating_a_discrete_spectrum_widens_the_window_intervals_and_nothing_els
     path = next((q for q in ("out/step3/F3_60k_s1.pt", "out/flow/F_60k.pt") if os.path.exists(q)), None)
     if path is None:
         pytest.skip("no flow checkpoint present")
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     flow = load_flow(path).eval()
     # two broad peaks: no pole at the width floor, so the statement changes the intervals only (with
     # narrow lines flagged it also fits them as zero-width lines, tested above)
@@ -367,7 +367,7 @@ def test_stating_a_discrete_spectrum_widens_the_window_intervals_and_nothing_els
 
 
 def test_central_interval_is_exact_at_any_sample_count():
-    from spevae.posterior import central_interval
+    from poleflow.posterior import central_interval
     rng = np.random.default_rng(0)
     for n in (25, 60, 200):
         x = rng.standard_normal((4000, n + 1))                 # n samples and one further draw
@@ -382,8 +382,8 @@ def test_the_continue_command_gives_the_posterior_report_for_a_flow_checkpoint(t
     path = next((q for q in ("out/step3/F3_60k_s1.pt", "out/flow/F_60k.pt") if os.path.exists(q)), None)
     if path is None:
         pytest.skip("no flow checkpoint present")
-    from spevae.cli import main
-    from spevae.evaluation import cases as C
+    from poleflow.cli import main
+    from poleflow.evaluation import cases as C
     mg, _ = C.hubbard_dimer_cell()                   # real DQMC bins, four exact lines
     bins = tmp_path / "bins.txt"
     np.savetxt(bins, mg.bins.double().numpy())

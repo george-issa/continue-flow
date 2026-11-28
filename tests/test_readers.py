@@ -12,14 +12,14 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.data import (
+from poleflow.data import (
     gissa_cube_axes,
     read_gissa_cube,
     read_long_text_bins,
     read_model_params,
     read_smoqy_dir,
 )
-from spevae.paths import data_path
+from poleflow.paths import data_path
 
 REAL = data_path("datasets", "real")
 HUBBARD = str(REAL / "hubbard_square_U6.00_mu0.00_L4_b10.00-1")

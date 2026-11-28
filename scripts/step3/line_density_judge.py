@@ -50,7 +50,7 @@ OFF, ON, INK = "#2a78d6", "#0b7a75", "#0b0b0b"
 
 def band_of_lines(n, beta, rng):
     """N lines under a semicircle of random width and centre; weights scatter around the envelope."""
-    from spevae.data.exact_models import DiscreteSpectrum
+    from poleflow.data.exact_models import DiscreteSpectrum
     W, c = rng.uniform(3.0, 6.0), rng.uniform(-1.0, 1.0)
     u = np.sort(rng.uniform(-1.0, 1.0, n))
     w = np.sqrt(np.clip(1.0 - u * u, 0.0, None)) * rng.gamma(2.0, 0.5, n)
@@ -59,8 +59,8 @@ def band_of_lines(n, beta, rng):
 
 
 def items(n, beta, per):
-    from spevae.evaluation.cases import Truth
-    from spevae.physics import SpectralQuadrature
+    from poleflow.evaluation.cases import Truth
+    from poleflow.physics import SpectralQuadrature
     quad = SpectralQuadrature.for_beta(beta)
     x = torch.linspace(0.0, 1.0, int(round(beta / J.DTAU)) + 1)
     rng = np.random.default_rng(4000 + n)
@@ -80,9 +80,9 @@ def lattice_items(beta):
 
 
 def run(out, flow_path, beta, noise, n, per, arms=("default", "stated")):
-    from spevae.evaluation import cases as C
-    from spevae.models.flow import load_flow
-    from spevae.posterior import DEFAULT_WINDOWS, continue_posterior
+    from poleflow.evaluation import cases as C
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(flow_path).eval()
@@ -139,8 +139,8 @@ def soft_truth(item, windows, s):
 
 
 def soft(out):
-    from spevae.physics.poles import PoleSet
-    from spevae.posterior import DEFAULT_WINDOWS, central_interval
+    from poleflow.physics.poles import PoleSet
+    from poleflow.posterior import DEFAULT_WINDOWS, central_interval
     out = Path(out)
     res = {"edge_widths_over_resolution": list(SOFT), "settings": []}
     runs = [(json.load(open(f)), f) for f in sorted(out.glob("density_b*_N*.json"))

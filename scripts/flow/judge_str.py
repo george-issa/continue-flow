@@ -26,11 +26,11 @@ import numpy as np
 import torch
 
 import judge_flow as J
-from spevae import load_model
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.evaluation import cases as C
-from spevae.models.flow import load_flow, refine_samples
-from spevae.physics.poles import PoleSet
+from poleflow import load_model
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.evaluation import cases as C
+from poleflow.models.flow import load_flow, refine_samples
+from poleflow.physics.poles import PoleSet
 
 BETA = 8.0
 #: refinement schedule of the judgements banked 2026-11-23/24 (chosen by the

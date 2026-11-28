@@ -2,7 +2,7 @@
 #
 # Two sites, hopping t = 1, on-site U in the particle-hole symmetric form, mu = 0
 # (half filling: no sign problem).  The spectrum is known exactly (four poles with
-# temperature-dependent weights, `spevae.data.exact_models.hubbard_cluster`), so
+# temperature-dependent weights, `poleflow.data.exact_models.hubbard_cluster`), so
 # the binned local G(tau) this script writes is real Monte Carlo data whose
 # continuation can be checked against the right answer.
 #

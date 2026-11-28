@@ -36,7 +36,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from spevae.posterior import DEFAULT_WINDOWS, central_interval
+from poleflow.posterior import DEFAULT_WINDOWS, central_interval
 
 TUNE = {(8.0, 1e-4, 0.125), (8.0, 1e-3, 0.125), (8.0, 1e-2, 0.125), (2.0, 1e-3, 0.125), (16.0, 1e-3, 0.125)}
 DRAWS = 16

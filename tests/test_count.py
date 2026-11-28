@@ -5,7 +5,7 @@ import os
 import pytest
 import torch
 
-from spevae.models.count import (CountPosterior, count_weights, load_count, resample_by_count,
+from poleflow.models.count import (CountPosterior, count_weights, load_count, resample_by_count,
                                  save_count)
 
 
@@ -50,9 +50,9 @@ def test_posterior_with_a_count_model_keeps_its_size_and_fit():
     path = "out/flow/F_60k.pt"
     if not os.path.exists(path):
         pytest.skip("reference flow checkpoint not present")
-    from spevae.evaluation import cases as C
-    from spevae.models.flow import load_flow
-    from spevae.posterior import continue_posterior
+    from poleflow.evaluation import cases as C
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import continue_posterior
 
     flow = load_flow(path).eval()
 

@@ -12,9 +12,9 @@ sys.path.insert(0, "scripts/flow")
 import torch
 
 import judge_str as JS
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.models.flow import load_flow, refine_samples
-from spevae.physics.poles import PoleSet
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.models.flow import load_flow, refine_samples
+from poleflow.physics.poles import PoleSet
 
 torch.set_num_threads(6)
 flow = load_flow(sys.argv[1]).eval()

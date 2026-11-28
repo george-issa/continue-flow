@@ -19,7 +19,7 @@ report before the change and of MaxEnt on the same data.
 `run` writes OUT/line_fit_b<beta>_n<noise>[_dt<dtau>][.shard<K>of<N>].json:
 the report at its defaults on all 44 spectra (K, N: spectra K mod N).  With
 `stated` it writes OUT/line_fit_stated_...: the 24 line spectra with
-`discrete=True` and the range the data alone allow, as `spevae continue
+`discrete=True` and the range the data alone allow, as `poleflow continue
 --discrete` runs.  JUDGE_DTAU as in `exact_models_judge.py`.  `fig` pairs
 every result in OUT with the `floor_option_judge.py` result of the same
 setting found in the REFERENCE_DIRs and writes OUT/line_fit.{json,png};
@@ -58,9 +58,9 @@ ARMS = (("old", "before", OLD), ("default", "the report at its defaults", NEW),
 
 
 def run(out, flow_path, beta, noise, k, n, stated):
-    from spevae.evaluation import cases as C
-    from spevae.models.flow import load_flow
-    from spevae.posterior import DEFAULT_WINDOWS, continue_posterior
+    from poleflow.evaluation import cases as C
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(flow_path).eval()

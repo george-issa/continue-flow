@@ -11,12 +11,12 @@ sys.path.insert(0, "src")
 import numpy as np, torch
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from spevae import load_model
-from spevae.physics.poles import PoleSet, effective_pole_count
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.data.noise import NoiseModel, sample_correlated_noise
-from spevae.losses import spectral_w1
-from spevae.refine import z_descend
+from poleflow import load_model
+from poleflow.physics.poles import PoleSet, effective_pole_count
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
+from poleflow.losses import spectral_w1
+from poleflow.refine import z_descend
 torch.set_num_threads(4)
 BETA = 8.0
 quad = SpectralQuadrature.for_beta(BETA)

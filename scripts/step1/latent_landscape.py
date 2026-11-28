@@ -2,11 +2,11 @@
 space, does some z decode near truth, and does z-space chi^2 descent reach it?"""
 import sys, json, torch
 sys.path.insert(0, "src")
-from spevae import load_model
-from spevae.physics.poles import PoleSet
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.losses import spectral_w1
-from spevae.data.noise import NoiseModel, sample_correlated_noise
+from poleflow import load_model
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.losses import spectral_w1
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
 import numpy as np
 
 beta, ntau, nz = 8.0, 64, 1e-4

@@ -5,8 +5,8 @@ import math
 import pytest
 import torch
 
-from spevae.data.exact_models import EXACT_DISCRETE
-from spevae.data.pole_prior import PolePriorGenerator
+from poleflow.data.exact_models import EXACT_DISCRETE
+from poleflow.data.pole_prior import PolePriorGenerator
 
 
 def test_exact_truths_are_valid_pole_closed_items():
@@ -58,8 +58,8 @@ def test_line_spectra_in_the_bank_give_exact_data_and_their_pole_label(tmp_path)
     in closed form, the target is the canonical pole label, the node spectrum is the lines
     binned onto the nodes."""
     import numpy as np
-    from spevae.data import exact_models as X
-    from spevae.data.label_bank import LabelBank, draw_bank_truths, extract_smooth_label
+    from poleflow.data import exact_models as X
+    from poleflow.data.label_bank import LabelBank, draw_bank_truths, extract_smooth_label
     beta = 8.0
     truths = draw_bank_truths(2, seed=11, families=("holstein_atom",), beta_choices=(beta,))
     assert all(isinstance(t, X.DiscreteSpectrum) for t in truths)
@@ -95,7 +95,7 @@ def test_line_spectra_in_the_bank_give_exact_data_and_their_pole_label(tmp_path)
         exact = t.greens(x) / t.weights.sum()
         assert np.abs(b.G_clean[i].numpy() - exact).max() < 1e-12      # closed form, not quadrature
         # the label reproduces those data (a dense ladder is representable) ...
-        from spevae.physics import PoleGreens, PoleSet
+        from poleflow.physics import PoleGreens, PoleSet
         lab = PoleSet(*(b.poles_true[k][i:i + 1] for k in ("eps", "gamma", "a", "b")))
         # (to 1e-4 on macOS and 2e-4 on Linux: the label is a nonlinear fit)
         assert float((PoleGreens(b.quad)(lab, b.x)[0] - b.G_clean[i]).abs().max()) < 5e-4

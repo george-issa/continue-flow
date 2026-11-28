@@ -26,12 +26,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from spevae import load_model
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.evaluation import cases as C
-from spevae.models.flow import load_flow
-from spevae.physics import PoleGreens, SpectralQuadrature
-from spevae.physics.poles import PoleSet
+from poleflow import load_model
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.evaluation import cases as C
+from poleflow.models.flow import load_flow
+from poleflow.physics import PoleGreens, SpectralQuadrature
+from poleflow.physics.poles import PoleSet
 
 BETA = 8.0
 S = 100                                   # posterior samples per input
@@ -190,7 +190,7 @@ def test_pairs(flow, vae):
         truth = PoleSet(eps=torch.tensor([[-1.6, 1.4]]) * BETA, gamma=torch.tensor([[0.45, 0.5]]) * BETA,
                         a=torch.tensor([[wl, 1 - wl]]), b=torch.zeros(1, 2))
         Gc = PoleGreens(quad)(truth, x)
-        from spevae.data.noise import NoiseModel, sample_correlated_noise
+        from poleflow.data.noise import NoiseModel, sample_correlated_noise
         n, sigma, R = sample_correlated_noise(Gc, x, NoiseModel(scale=1e-4, xi=0.1),
                                               torch.Generator().manual_seed(7))
         G = (Gc + n).reshape(1, -1)

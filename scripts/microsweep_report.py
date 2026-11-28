@@ -22,10 +22,10 @@ import torch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from spevae import load_model  # noqa: E402
-from spevae.data.pole_prior import PolePriorGenerator  # noqa: E402
-from spevae.data.synthetic import SyntheticGenerator  # noqa: E402
-from spevae.training import evaluate  # noqa: E402
+from poleflow import load_model  # noqa: E402
+from poleflow.data.pole_prior import PolePriorGenerator  # noqa: E402
+from poleflow.data.synthetic import SyntheticGenerator  # noqa: E402
+from poleflow.training import evaluate  # noqa: E402
 
 ARM_ORDER = ["p00", "p25", "p50", "p75", "cur"]
 ARM_LABEL = {"p00": "0.00", "p25": "0.25", "p50": "0.50", "p75": "0.75",

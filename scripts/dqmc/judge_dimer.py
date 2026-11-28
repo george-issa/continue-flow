@@ -45,14 +45,14 @@ FLOW, VAE, ME, INK = "#2a78d6", "#eb6834", "#7d7c78", "#0b0b0b"
 
 
 def main():
-    from spevae import load_model
-    from spevae.benchmark import run_maxent
-    from spevae.data.exact_models import hubbard_cluster
-    from spevae.data.readers import read_smoqy_dir
-    from spevae.models.flow import load_flow
-    from spevae.physics.poles import PoleSet
-    from spevae.posterior import continue_posterior
-    from spevae.refine import RefineConfig, refine_latent
+    from poleflow import load_model
+    from poleflow.benchmark import run_maxent
+    from poleflow.data.exact_models import hubbard_cluster
+    from poleflow.data.readers import read_smoqy_dir
+    from poleflow.models.flow import load_flow
+    from poleflow.physics.poles import PoleSet
+    from poleflow.posterior import continue_posterior
+    from poleflow.refine import RefineConfig, refine_latent
 
     sim, U = sys.argv[1], float(sys.argv[2])
     flow, vae, out = load_flow(sys.argv[3]).eval(), load_model(sys.argv[4]), Path(sys.argv[5])

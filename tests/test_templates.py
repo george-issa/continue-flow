@@ -2,8 +2,8 @@
 
 import torch
 
-from spevae.physics import PoleSet, SpectralQuadrature, PoleGreens
-from spevae.physics.templates import (TemplateFit, chi2_quantile_95,
+from poleflow.physics import PoleSet, SpectralQuadrature, PoleGreens
+from poleflow.physics.templates import (TemplateFit, chi2_quantile_95,
                                       fit_ladder, ladder_starts, select_model)
 
 BETA = 8.0
@@ -78,7 +78,7 @@ def test_peaks_template_wins_the_irregular_triplet():
     # the case free poles had to catch: peaks(3) matches the fit at k=8 vs 12
     e, g, w = [0.4, 1.1, 2.6], [0.35, 0.25, 0.45], [0.5, 0.3, 0.2]
     x, G, sigma = _probe(e, g, w, seed=11)
-    from spevae.physics.templates import fit_peaks
+    from poleflow.physics.templates import fit_peaks
     fit = fit_peaks(BETA, x, G, sigma, n=3, starts=[[0.4, 1.2, 2.5]])
     assert fit.chi2 < 1.2, fit
     got = sorted(fit.params[f"eps{i}"] for i in range(3))
@@ -92,7 +92,7 @@ def test_peaks_template_wins_the_irregular_triplet():
 
 
 def test_edged_band_recovers_its_own_shape():
-    from spevae.physics.templates import fit_edged_band
+    from poleflow.physics.templates import fit_edged_band
     # synthetic edged band: 5 poles across [-1.5, 1.5], sharp edges
     m, c0, W0, gb0, ge0 = 5, 0.3, 1.4, 0.45, 0.12
     ks = torch.linspace(-1, 1, m)
@@ -109,7 +109,7 @@ def test_edged_band_recovers_its_own_shape():
 
 def test_asym_peaks_demanded_by_asymmetric_truth_only():
     import numpy as np
-    from spevae.physics.templates import fit_peaks
+    from poleflow.physics.templates import fit_peaks
     # asymmetric triplet: sum-zero b, certified positive
     a = np.array([0.5, 0.3, 0.2]); t = np.array([0.35, -0.4, -0.25])
     b = a * (t - (a * t).sum())
@@ -140,7 +140,7 @@ def test_asym_peaks_demanded_by_asymmetric_truth_only():
 
 
 def test_symmetric_truth_keeps_the_symmetric_winner():
-    from spevae.physics.templates import fit_peaks
+    from poleflow.physics.templates import fit_peaks
     e, g, w = [0.4, 1.1, 2.6], [0.35, 0.25, 0.45], [0.5, 0.3, 0.2]
     x, G, sigma = _probe(e, g, w, seed=11)
     starts = [[0.4, 1.1, 2.6]]
@@ -175,7 +175,7 @@ def test_select_model_repolishes_borderline_contests():
 
 
 def test_mirrored_peaks_recovers_free_pairs():
-    from spevae.physics.templates import fit_mirrored_peaks
+    from poleflow.physics.templates import fit_mirrored_peaks
     # 3 mirror pairs with UNEQUAL widths/weights -- a ladder cannot fit this,
     # mirrored_peaks must
     e = [0.6, 1.4, 2.6]; g = [0.15, 0.35, 0.5]; w = [0.5, 0.3, 0.2]

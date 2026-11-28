@@ -46,7 +46,7 @@ COPIES = (
      "lines. Right: cumulative weight, where the area between a curve and the black steps is the error."),
     ("2_real_data", "hubbard_dimer_dqmc_stated_discrete.png",
      ("out/dqmc/{m}_discrete/dimer_judge.png",),
-     "The same dimer bins with the spectrum stated to be discrete (`spevae continue --discrete`): the four "
+     "The same dimer bins with the spectrum stated to be discrete (`poleflow continue --discrete`): the four "
      "lines are fitted as zero-width lines.",
      "As above; the posterior's lines are the blue bars, on the scale of the exact lines."),
     ("2_real_data", "hubbard_ring4_dqmc.png",
@@ -97,7 +97,7 @@ COPIES = (
      "line spectrum, with the statement against before. Bottom left: share of windows whose exact weight "
      "lies inside the stated intervals; dashes are nominal. Bottom right: all settings pooled."),
     ("3_error_bars", "discrete_statement.png", ("out/step3/discrete_option_{m}/discrete_option.png",),
-     "Exact line spectra again: what stating that the spectrum is discrete (`spevae continue --discrete`) "
+     "Exact line spectra again: what stating that the spectrum is discrete (`poleflow continue --discrete`) "
      "does to the intervals. Many close lines look like a continuous band in the data, so the report cannot "
      "flag them itself; the statement is how the user tells it.",
      "Left: share of windows whose exact weight lies inside the stated intervals, without the statement (blue) "

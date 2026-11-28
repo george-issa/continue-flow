@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from spevae.metrics import find_peaks, gap_metrics, matched_peak_error, spectral_report
+from poleflow.metrics import find_peaks, gap_metrics, matched_peak_error, spectral_report
 
 W = np.linspace(-8, 8, 3201)
 

@@ -13,10 +13,10 @@ import json
 
 import torch
 
-from spevae.data import SyntheticGenerator
-from spevae.losses import LossWeights
-from spevae.models import SPEVAE
-from spevae.training import PretrainConfig, evaluate, pretrain
+from poleflow.data import SyntheticGenerator
+from poleflow.losses import LossWeights
+from poleflow.models import SPEVAE
+from poleflow.training import PretrainConfig, evaluate, pretrain
 
 
 def main() -> None:
@@ -122,7 +122,7 @@ def main() -> None:
           f"[{base['w1_omega']:.4f} -> {final['w1_omega']:.4f}]")
 
     if args.out:
-        from spevae import save_model
+        from poleflow import save_model
         save_model(model, args.out, cli=vars(args), metrics=final,
                    metrics_before=base)
         print(f"saved -> {args.out}")

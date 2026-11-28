@@ -21,10 +21,10 @@ import torch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from spevae import load_model  # noqa: E402
-from spevae.data.synthetic import SyntheticGenerator  # noqa: E402
-from spevae.physics.poles import effective_pole_count  # noqa: E402
-from spevae.training import evaluate  # noqa: E402
+from poleflow import load_model  # noqa: E402
+from poleflow.data.synthetic import SyntheticGenerator  # noqa: E402
+from poleflow.physics.poles import effective_pole_count  # noqa: E402
+from poleflow.training import evaluate  # noqa: E402
 
 
 def report(path: str, gen: SyntheticGenerator, n_batches: int, batch_size: int,

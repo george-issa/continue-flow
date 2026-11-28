@@ -13,7 +13,7 @@ import pytest
 import torch
 from scipy import integrate
 
-from spevae.physics import (
+from poleflow.physics import (
     MATSUBARA_NU0,
     PoleGreens,
     PoleSet,
@@ -366,7 +366,7 @@ def test_spectral_from_poles_accepts_per_sample_grids():
 
 def test_a_zero_width_line_transforms_exactly_and_counts_in_the_cumulative_weight():
     """A pole with gamma = 0 is a delta function: a K(x, eps) in G, a step in the cumulative weight."""
-    from spevae.physics import cumulative_from_poles, line_density
+    from poleflow.physics import cumulative_from_poles, line_density
     dd = torch.float64
     fwd = PoleGreens(SpectralQuadrature.for_beta(8.0, dtype=dd))
     x = torch.linspace(0.0, 1.0, 33, dtype=dd)

@@ -35,8 +35,8 @@ DT = torch.float64
 def lm_refine(flow, z0, norm, beta, x, target, sigma, W, lam, anneal_from=1e-2,
               stages=6, iters_stage=6, iters_final=40):
     """Batched Levenberg-Marquardt on F.  Returns (PoleSet, u, F, iterations)."""
-    from spevae.physics import PoleGreens, SpectralQuadrature
-    from spevae.physics.poles import PoleSet
+    from poleflow.physics import PoleGreens, SpectralQuadrature
+    from poleflow.physics.poles import PoleSet
     quad = SpectralQuadrature.for_beta(beta, dtype=DT)
     nodes, wts = quad.nodes, quad.weights
     Kw = wts[:, None] * PoleGreens(quad).kernel_matrix(x.to(DT))          # (M, L)
@@ -132,9 +132,9 @@ def lm_refine(flow, z0, norm, beta, x, target, sigma, W, lam, anneal_from=1e-2,
 def main():
     import judge_flow as J
     import judge_str as JS
-    from spevae.data.pole_prior import PolePriorGenerator
-    from spevae.models.flow import load_flow
-    from spevae.physics.poles import PoleSet
+    from poleflow.data.pole_prior import PolePriorGenerator
+    from poleflow.models.flow import load_flow
+    from poleflow.physics.poles import PoleSet
 
     flow_path, out = sys.argv[1], Path(sys.argv[2])
     torch.set_num_threads(6)

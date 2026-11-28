@@ -44,9 +44,9 @@ import torch
 
 import judge_flow as J
 import judge_str as JS
-from spevae.evaluation import cases as C
-from spevae.models.flow import load_flow, refine_samples
-from spevae.physics import PoleGreens, SpectralQuadrature
+from poleflow.evaluation import cases as C
+from poleflow.models.flow import load_flow, refine_samples
+from poleflow.physics import PoleGreens, SpectralQuadrature
 
 S = 200
 COL = {"none": "#eda100", "whitener": "#1baf7a", "bootstrap": "#2a78d6"}

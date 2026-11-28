@@ -33,8 +33,8 @@ ROUNDS = 2
 
 def main():
     import judge_flow as J
-    from spevae.models.flow import add_pole, load_flow, refine_samples
-    from spevae.physics.poles import PoleSet
+    from poleflow.models.flow import add_pole, load_flow, refine_samples
+    from poleflow.physics.poles import PoleSet
 
     flow_path, out = sys.argv[1], Path(sys.argv[2])
     torch.set_num_threads(6)

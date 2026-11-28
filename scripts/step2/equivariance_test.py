@@ -28,14 +28,14 @@ sys.path.insert(0, "src")
 import numpy as np
 import torch
 
-from spevae import load_model
-from spevae.data.label_bank import GAMMA_MIN, SmoothTruth
-from spevae.data.noise import NoiseModel, sample_correlated_noise
-from spevae.losses import spectral_w1
-from spevae.models.equivariant import MirrorSymmetrized, mirror_poles, reflect_tau
-from spevae.physics import PoleGreens, SpectralQuadrature
-from spevae.physics.poles import PoleSet
-from spevae.refine import RefineConfig, refine_latent, z_descend
+from poleflow import load_model
+from poleflow.data.label_bank import GAMMA_MIN, SmoothTruth
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
+from poleflow.losses import spectral_w1
+from poleflow.models.equivariant import MirrorSymmetrized, mirror_poles, reflect_tau
+from poleflow.physics import PoleGreens, SpectralQuadrature
+from poleflow.physics.poles import PoleSet
+from poleflow.refine import RefineConfig, refine_latent, z_descend
 
 torch.set_num_threads(2)
 TAG, CKPT, PART = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -194,9 +194,9 @@ class Mirrored:
 
 
 def run_streams():
-    from spevae.data.pole_prior import PolePriorGenerator
-    from spevae.data.synthetic import SyntheticGenerator
-    from spevae.training import evaluate
+    from poleflow.data.pole_prior import PolePriorGenerator
+    from poleflow.data.synthetic import SyntheticGenerator
+    from poleflow.training import evaluate
     rep = {}
     for sname, mk in [("pole", lambda: PolePriorGenerator(beta_range=(8.0, 8.0))),
                       ("legacy", lambda: SyntheticGenerator(beta_range=(8.0, 8.0)))]:
@@ -213,7 +213,7 @@ def run_streams():
 
 # -------------------------------------------------------------- holstein --- #
 def run_holstein():
-    from spevae.data.readers import read_gissa_cube
+    from poleflow.data.readers import read_gissa_cube
     CUBE = ("/Users/gissa/Documents/AC/SPE-AC-VAE-old/Data/datasets/real/"
             "gIssa/for_george_ac.jld2")
     mg = read_gissa_cube(CUBE, beta=8.0, omega=1.0, n=1.0, lam=0.325)

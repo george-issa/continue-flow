@@ -9,8 +9,8 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.data import from_bins, read_text_bins
-from spevae.data.real import endpoint_convention
+from poleflow.data import from_bins, read_text_bins
+from poleflow.data.real import endpoint_convention
 
 BETA = 8.0
 
@@ -100,7 +100,7 @@ def test_the_grid_can_be_stated_when_the_data_do_not_decide():
 
 def test_the_command_reads_a_file_that_stops_before_beta_and_refuses_a_spin_summed_one(tmp_path, capsys):
     import argparse
-    from spevae.cli import _load_measured
+    from poleflow.cli import _load_measured
     bins = make_bins()
     short, doubled = tmp_path / "short.txt", tmp_path / "doubled.txt"
     np.savetxt(short, bins[:, :-1])

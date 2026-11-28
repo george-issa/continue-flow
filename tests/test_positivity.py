@@ -12,8 +12,8 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.physics.poles import PoleSet
-from spevae.physics.positivity import PositivityReport, certify, positivity_certificate
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.positivity import PositivityReport, certify, positivity_certificate
 
 
 def scan_min(eps, gamma, a, b, lo=-60.0, hi=60.0, n=400_001):

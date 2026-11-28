@@ -76,7 +76,7 @@ def set_design(name):
 
 
 def batch_for(i):
-    from spevae.data.pole_prior import PolePriorGenerator
+    from poleflow.data.pole_prior import PolePriorGenerator
     nz = NOISES[i]
     gen = PolePriorGenerator(omega_c=20.0, P_max=12, residue_mode="dispersive",
                              beta_range=(BETA, BETA), dtau_choices=(DTAUS[i % len(DTAUS)],),
@@ -88,9 +88,9 @@ def batch_for(i):
 def run(flow_path, out, shard, nshards):
     import judge_flow as J
     import judge_str as JS
-    from spevae.models.constraints import spectral_norm_from_greens
-    from spevae.models.flow import load_flow, refine_samples
-    from spevae.physics.poles import PoleSet
+    from poleflow.models.constraints import spectral_norm_from_greens
+    from poleflow.models.flow import load_flow, refine_samples
+    from poleflow.physics.poles import PoleSet
 
     torch.set_num_threads(4)
     flow = load_flow(flow_path).eval()
@@ -188,7 +188,7 @@ def truth_chi2():
     """chi^2 per point of each TRUTH against its own noisy data, per noise level
     (the batches are rebuilt from their seeds; no sampling)."""
     import judge_flow as J
-    from spevae.physics.poles import PoleSet
+    from poleflow.physics.poles import PoleSet
     out = {}
     for i, nz in enumerate(NOISES):
         b = batch_for(i)

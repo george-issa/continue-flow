@@ -12,7 +12,7 @@ import math
 import pytest
 import torch
 
-from spevae.physics import (
+from poleflow.physics import (
     PoleGreens,
     PoleSet,
     SpectralQuadrature,
@@ -140,8 +140,8 @@ def test_refit_recovers_a_two_pole_truth_from_a_comb():
     """The minimal-pole claim, end to end without any network: bins generated
     from a known 2-pole spectrum, a comb approximation of it consolidated at a
     coarse resolution and refit to the data must land back on the truth."""
-    from spevae.data import from_bins
-    from spevae.physics import refit_poles_to_greens
+    from poleflow.data import from_bins
+    from poleflow.physics import refit_poles_to_greens
 
     truth = PoleSet(eps=torch.tensor([[-1.5, 1.8]]),
                     gamma=torch.tensor([[0.35, 0.45]]),
@@ -181,8 +181,8 @@ def test_mirror_refit_is_exactly_symmetric_and_recovers_a_symmetric_truth():
     """PH-symmetric truth (poles at +-2 with opposite b), bins generated from
     it; the mirror-constrained refit must recover it with A(w) = A(-w)
     holding identically, not approximately."""
-    from spevae.data import from_bins
-    from spevae.physics import refit_poles_to_greens
+    from poleflow.data import from_bins
+    from poleflow.physics import refit_poles_to_greens
 
     truth = PoleSet(eps=torch.tensor([[-2.0, 2.0]]),
                     gamma=torch.tensor([[0.4, 0.4]]),
@@ -225,8 +225,8 @@ def test_mirror_refit_is_exactly_symmetric_and_recovers_a_symmetric_truth():
 def test_positivity_weight_removes_the_in_gap_dip():
     """A pole set constructed to dip negative in its gap: the refit with
     positivity pressure must fix the dip without leaving the noise floor."""
-    from spevae.data import from_bins
-    from spevae.physics import refit_poles_to_greens
+    from poleflow.data import from_bins
+    from poleflow.physics import refit_poles_to_greens
 
     truth = PoleSet(eps=torch.tensor([[-2.0, 2.0]]),
                     gamma=torch.tensor([[0.5, 0.5]]),
@@ -278,8 +278,8 @@ def test_pair_positivity_condition_is_exact():
 def test_pair_bound_refit_is_certified_positive_by_construction():
     """Mirror refit with the structural pair bound: certificate must pass for
     the result, whatever the data wanted."""
-    from spevae.data import from_bins
-    from spevae.physics import refit_poles_to_greens
+    from poleflow.data import from_bins
+    from poleflow.physics import refit_poles_to_greens
 
     truth = PoleSet(eps=torch.tensor([[-2.0, 2.0]]),
                     gamma=torch.tensor([[0.4, 0.4]]),
@@ -317,8 +317,8 @@ def test_pair_bound_refit_is_certified_positive_by_construction():
 def test_sharpness_verdict_discriminates():
     """A genuinely narrow pole at high SNR must be declared data-demanded;
     a broad structure must come back undecidable."""
-    from spevae.data import from_bins
-    from spevae.physics import sharpness_verdict
+    from poleflow.data import from_bins
+    from poleflow.physics import sharpness_verdict
 
     quad = SpectralQuadrature(nu_c=BETA * 20.0, h=0.05, dtype=torch.float64)
     tau = torch.linspace(0, BETA, 101, dtype=torch.float64)
@@ -360,7 +360,7 @@ def test_rank_scan_escapes_the_comb_aliasing_trap():
     and blocks every single-pole pruning move.  The rank scan must select
     n = 3 and land the rungs, because the 3-pole refit reaches the noise
     floor and the elbow prefers the smallest count that does."""
-    from spevae.physics.consolidate import rank_scan
+    from poleflow.physics.consolidate import rank_scan
 
     beta, noise = 8.0, 1e-4
     truth = PoleSet(eps=torch.tensor([[0.5, 1.5, 2.5]]) * beta,
@@ -401,7 +401,7 @@ def test_rank_scan_escapes_the_comb_aliasing_trap():
     assert (got - want).abs().max() < 0.6, got
     # And the selected spectrum is indistinguishable from the truth's.
     quad2 = SpectralQuadrature(nu_c=beta * 20.0, h=0.09)
-    from spevae.losses import spectral_w1
+    from poleflow.losses import spectral_w1
     w1 = float(spectral_w1(sel.to_dimensionless(beta).spectral(quad2.nodes),
                            truth.to_dimensionless(beta).spectral(quad2.nodes),
                            quad2, beta=beta))
@@ -414,7 +414,7 @@ def test_ladder_verdict_classifies_the_banked_exemplars():
     continuum-like (steady multiplicative arrival, no shelf), and the
     fano band -- a resolved band at the comb/smooth boundary -- is
     honestly ambiguous."""
-    from spevae.physics import ladder_verdict
+    from poleflow.physics import ladder_verdict
     ns = list(range(1, 9))
     triplet = [12677.2, 9.7518, 0.99002, 0.86568, 1.00604, 1.14400,
                1.58054, 2.29217]

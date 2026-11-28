@@ -11,10 +11,10 @@ import numpy as np
 import pytest
 import torch
 
-from spevae import load_model, save_model
-from spevae.data.synthetic import SyntheticGenerator
-from spevae.models import SPEVAE
-from spevae.physics import SpectralQuadrature
+from poleflow import load_model, save_model
+from poleflow.data.synthetic import SyntheticGenerator
+from poleflow.models import SPEVAE
+from poleflow.physics import SpectralQuadrature
 
 BETA = 10.0
 

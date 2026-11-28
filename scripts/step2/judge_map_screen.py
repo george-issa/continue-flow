@@ -25,13 +25,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from spevae import load_model
-from spevae.data.label_bank import GAMMA_MIN, SmoothTruth
-from spevae.data.noise import NoiseModel, sample_correlated_noise
-from spevae.losses import spectral_w1
-from spevae.physics import PoleGreens, SpectralQuadrature, certify
-from spevae.physics.poles import PoleSet
-from spevae.refine import z_descend
+from poleflow import load_model
+from poleflow.data.label_bank import GAMMA_MIN, SmoothTruth
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
+from poleflow.losses import spectral_w1
+from poleflow.physics import PoleGreens, SpectralQuadrature, certify
+from poleflow.physics.poles import PoleSet
+from poleflow.refine import z_descend
 
 plt.rcParams.update({"font.size": 8.5, "axes.titlesize": 9,
                      "axes.labelsize": 9, "axes.grid": True,

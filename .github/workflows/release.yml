@@ -21,7 +21,7 @@ jobs:
           python-version: "3.12"
       - name: The tag matches the package version
         run: |
-          version=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/spevae/__init__.py)
+          version=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/poleflow/__init__.py)
           test "v$version" = "$GITHUB_REF_NAME"
       - name: Build
         run: |

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Overlay the held-out eval trajectories of pole-count comparison runs.
 
-Parses the `[eval @ N] k=v ...` lines the `spevae pretrain` CLI emits.  All
+Parses the `[eval @ N] k=v ...` lines the `poleflow pretrain` CLI emits.  All
 runs share the frozen eval stream, so the curves are directly comparable
 point by point -- the whole reason the figure is meaningful.
 

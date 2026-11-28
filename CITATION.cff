@@ -1,14 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
-title: "continue-flow: analytic continuation of imaginary-time Green's functions with tested error bars"
+title: "poleflow: analytic continuation of imaginary-time Green's functions with tested error bars"
 authors:
   - family-names: Issa
     given-names: George
 version: 0.1.0
 date-released: 2026-11-27
 license: MIT
-repository-code: "https://github.com/george-issa/continue-flow"
+repository-code: "https://github.com/george-issa/poleflow"
 keywords:
   - analytic continuation
   - quantum Monte Carlo

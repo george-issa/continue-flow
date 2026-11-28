@@ -4,7 +4,7 @@ The cube is 9.9 GB and lives outside the repository; every Holstein judge
 read it by absolute path.  This writes the one cell the judges use
 (beta 8, Omega 1, n 1, lambda 0.325) -- its raw bins plus the shipped
 SmoQyDEAC reference continuation -- to
-src/spevae/evaluation/fixtures/, and checks that the fixture reproduces the
+src/poleflow/evaluation/fixtures/, and checks that the fixture reproduces the
 cube-read MeasuredGreens bit for bit (bins, covariance, whitener, target).
 
 Usage (from the repo root):
@@ -19,8 +19,8 @@ sys.path.insert(0, "src")
 import numpy as np
 import torch
 
-from spevae.data.readers import read_gissa_cube
-from spevae.evaluation import cases
+from poleflow.data.readers import read_gissa_cube
+from poleflow.evaluation import cases
 
 CUBE_DIR = (sys.argv[1] if len(sys.argv) > 1 else
             "/Users/gissa/Documents/AC/SPE-AC-VAE-old/Data/datasets/real/gIssa")
@@ -29,7 +29,7 @@ CELL = dict(beta=8.0, omega=1.0, n=1.0, lam=0.325)
 mg = read_gissa_cube(os.path.join(CUBE_DIR, "for_george_ac.jld2"),
                      dos_path=os.path.join(CUBE_DIR, "george_DOS.jld2"), **CELL)
 bins = mg.bins.double().numpy()
-out = os.path.join("src/spevae/evaluation/fixtures", cases.HOLSTEIN_FIXTURE["file"])
+out = os.path.join("src/poleflow/evaluation/fixtures", cases.HOLSTEIN_FIXTURE["file"])
 payload = {"bins": bins}
 if mg.reference is not None:
     payload["ref_omega"] = np.asarray(mg.reference[0], float)

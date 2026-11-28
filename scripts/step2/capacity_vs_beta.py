@@ -17,7 +17,7 @@ sys.path.insert(0, "src")
 import numpy as np
 import torch
 
-from spevae.data.label_bank import (SMOOTH_FAMILIES, extract_smooth_label,
+from poleflow.data.label_bank import (SMOOTH_FAMILIES, extract_smooth_label,
                                     sample_smooth_truth)
 
 BETAS = (8.0, 12.0, 16.0, 20.0)
@@ -32,7 +32,7 @@ FAMILY_COLOR = {"gauss_mixture": "#4269d0", "gapped_pair": "#efb118",
 
 def one(args):
     fam, beta, params = args
-    from spevae.data.label_bank import SmoothTruth
+    from poleflow.data.label_bank import SmoothTruth
     lab = extract_smooth_label(SmoothTruth(fam, beta, params), P_max=N_MAX)
     res = dict(lab.ladder)
     res12 = res.get(12, min(r for n, r in lab.ladder if n <= 12))

@@ -19,8 +19,8 @@ sys.path.insert(0, "src")
 
 import torch
 
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.models.count import CountPosterior, save_count
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.models.count import CountPosterior, save_count
 
 
 def main():

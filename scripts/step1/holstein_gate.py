@@ -1,9 +1,9 @@
 import sys, json, torch
 sys.path.insert(0, "src")
-from spevae import load_model
-from spevae.physics.poles import PoleSet
-from spevae.physics.consolidate import rank_scan
-from spevae.data.readers import read_gissa_cube
+from poleflow import load_model
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.consolidate import rank_scan
+from poleflow.data.readers import read_gissa_cube
 beta = 8.0
 art = json.load(open("out/step1/prior_start.json"))
 h = next(c for c in art["cases"] if c["name"] == "Holstein")
@@ -11,7 +11,7 @@ h = next(c for c in art["cases"] if c["name"] == "Holstein")
 # instead: seed the scan from the stored A? cannot. Recompute via the script's
 # path would cost minutes; rather run the scan from the z-descent poles is the
 # old path. Simplest honest gate: scan the w=2 result -- rerun that one refit.
-from spevae.refine import refine_latent, RefineConfig, manifold_refit
+from poleflow.refine import refine_latent, RefineConfig, manifold_refit
 model = load_model("out/step1/s1_metric.pt")
 CUBE = "/Users/gissa/Documents/AC/SPE-AC-VAE-old/Data/datasets/real/gIssa/for_george_ac.jld2"
 mg = read_gissa_cube(CUBE, beta=8.0, omega=1.0, n=1.0, lam=0.325)
@@ -30,7 +30,7 @@ free, tr = rank_scan(pf, beta, mg.x[sl][None], mg.mean[sl].unsqueeze(0),
                      mg.sigma_mean[sl].unsqueeze(0), inv_sqrt_R=cov["inv_sqrt_R"])
 print(f"count-gated scan from that basin: {tr}")
 quadA = None
-from spevae.physics.forward import SpectralQuadrature
+from poleflow.physics.forward import SpectralQuadrature
 quad = SpectralQuadrature.for_beta(beta)
 json.dump(dict(scan=dict(ns=tr.ns, chi2s=tr.chi2s, selected_n=tr.selected_n,
                          chi2_selected=tr.chi2_selected),

@@ -1,13 +1,11 @@
-# continue-flow
+# poleflow
 
-[![tests](https://github.com/george-issa/continue-flow/actions/workflows/tests.yml/badge.svg)](https://github.com/george-issa/continue-flow/actions/workflows/tests.yml)
+[![tests](https://github.com/george-issa/poleflow/actions/workflows/tests.yml/badge.svg)](https://github.com/george-issa/poleflow/actions/workflows/tests.yml)
 
 Analytic continuation of imaginary-time Green's functions G(τ) from quantum
 Monte Carlo to real-frequency spectral functions A(ω). The result is a set of
 spectra that fit the data, reported with intervals on the spectral weight that
 were tested against exact answers.
-
-The Python package and the command are called `spevae`.
 
 ## Overview
 
@@ -64,14 +62,14 @@ every ω is not imposed on the samples.
 
 ```bash
 conda env create -f environment.yml
-conda activate spevae
+conda activate poleflow
 pip install -e ".[dev]"
 ```
 
 ## Usage
 
 ```bash
-spevae continue --bins mybins.txt --beta 8.0 --checkpoint flow.pt \
+poleflow continue --bins mybins.txt --beta 8.0 --checkpoint flow.pt \
                 --out report.npz --figure report.png
 ```
 
@@ -83,7 +81,7 @@ with the reason if the data fit no convention: a spin-summed G, a transposed
 file, a value that is not a number.
 
 The output on real DQMC bins of the half-filled Hubbard dimer (U = 4, β = 8,
-400 bins, the file in `src/spevae/evaluation/fixtures/`):
+400 bins, the file in `src/poleflow/evaluation/fixtures/`):
 
 ```
 posterior from 200 of 200 samples (100% accepted, ...)
@@ -117,9 +115,9 @@ The exact weights of this spectrum are 0.073, 0.426, 0.001, 0, 0.001, 0.426 and
 From Python:
 
 ```python
-from spevae.data import read_text_bins
-from spevae.models.flow import load_flow
-from spevae.posterior import continue_measured
+from poleflow.data import read_text_bins
+from poleflow.models.flow import load_flow
+from poleflow.posterior import continue_measured
 
 flow = load_flow("flow.pt")
 bins = read_text_bins("mybins.txt", beta=8.0)
@@ -127,7 +125,7 @@ report = continue_measured(flow, bins)
 print(report.summary())
 ```
 
-Readers for other formats are in `spevae.data`: SmoQyDQMC simulation
+Readers for other formats are in `poleflow.data`: SmoQyDQMC simulation
 directories, the Holstein cubes, and long-format `[tau_index, G, err]` text.
 
 ### Atoms, molecules and finite clusters
@@ -135,7 +133,7 @@ directories, the Holstein cubes, and long-format `[tau_index, G, err]` text.
 If the system has a discrete spectrum, say so:
 
 ```bash
-spevae continue --bins mybins.txt --beta 8.0 --checkpoint flow.pt --discrete
+poleflow continue --bins mybins.txt --beta 8.0 --checkpoint flow.pt --discrete
 ```
 
 The data often cannot tell a line from a narrow peak, or many close lines from
@@ -272,22 +270,22 @@ full record of what was measured is [`docs/TRAINING.md`](docs/TRAINING.md).
   [`ana_cont`](https://doi.org/10.1016/j.cpc.2022.108519) MaxEnt (vendored)
   and [SmoQyDEAC](https://scipost.org/SciPostPhysCodeb.39) (through Julia) on
   the same data and scores all methods with the same code.
-- **Evaluation suite** — `spevae eval` judges any method on a frozen set of
+- **Evaluation suite** — `poleflow eval` judges any method on a frozen set of
   synthetic truths and one real Holstein dataset. See
   [`docs/EVAL.md`](docs/EVAL.md).
 
 ## Repository layout
 
 ```
-continue-flow/
-├── src/spevae/
+poleflow/
+├── src/poleflow/
 │   ├── posterior.py          # the posterior report
 │   ├── models/               # flow model, encoder, VAE, constraint layer
 │   ├── physics/              # kernel, poles → G(τ), least squares, positivity
 │   ├── data/                 # readers, covariance, training priors, exact models
 │   ├── evaluation/           # the evaluation suite and its two data files
 │   ├── benchmark/            # MaxEnt and DEAC drivers
-│   └── cli.py                # the spevae command
+│   └── cli.py                # the poleflow command
 ├── scripts/step3/            # training recipe and the judges of the current model
 ├── scripts/dqmc/             # DQMC runs of exactly solvable clusters (Julia)
 ├── scripts/figures/          # builds figures/

@@ -37,8 +37,8 @@ DW = WG[1] - WG[0]
 
 
 def load(sim, U):
-    from spevae.data.exact_models import hubbard_cluster
-    from spevae.data.readers import read_smoqy_dir
+    from poleflow.data.exact_models import hubbard_cluster
+    from poleflow.data.readers import read_smoqy_dir
     name = os.path.basename(os.path.normpath(sim))
     ring = re.search(r"hubbard_ring(\d+)", name)
     if ring:
@@ -56,7 +56,7 @@ def load(sim, U):
 
 
 def subset(mg, idx):
-    from spevae.data.real import MeasuredGreens
+    from poleflow.data.real import MeasuredGreens
     return MeasuredGreens(bins=mg.bins[idx].clone(), tau=mg.tau, beta=mg.beta, label=mg.label,
                           includes_endpoints=mg.includes_endpoints, meta=dict(mg.meta))
 
@@ -77,8 +77,8 @@ def score(rep, exact):
 
 
 def run(out, flow_path, sim, U, k):
-    from spevae.models.flow import load_flow
-    from spevae.posterior import continue_measured
+    from poleflow.models.flow import load_flow
+    from poleflow.posterior import continue_measured
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(flow_path).eval()

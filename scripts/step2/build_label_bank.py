@@ -26,10 +26,10 @@ sys.path.insert(0, "src")
 import numpy as np
 import torch
 
-from spevae.data.label_bank import (DIP_TOL, GAMMA_MIN, SMOOTH_FAMILIES,
+from poleflow.data.label_bank import (DIP_TOL, GAMMA_MIN, SMOOTH_FAMILIES,
                                     LabelBank, build_label_bank)
-from spevae.physics.forward import PoleGreens, SpectralQuadrature
-from spevae.physics.poles import PoleSet, spectral_from_poles
+from poleflow.physics.forward import PoleGreens, SpectralQuadrature
+from poleflow.physics.poles import PoleSet, spectral_from_poles
 
 FAMILY_COLOR = {                     # fixed categorical order, never cycled
     "gauss_mixture": "#4269d0",
@@ -42,7 +42,7 @@ FAMILY_COLOR = {                     # fixed categorical order, never cycled
 
 def judge_entry(args):
     """(family, beta, params, label arrays) -> (g_gap, w1, bsat)."""
-    from spevae.data.label_bank import SmoothTruth
+    from poleflow.data.label_bank import SmoothTruth
     family, beta, params, eps, gam, a, b = args
     truth = SmoothTruth(family, beta, params)
     quad = SpectralQuadrature(nu_c=beta * 20.0, h=GAMMA_MIN / 3.5, n_tail=32,
@@ -65,7 +65,7 @@ def judge_entry(args):
     # step-2 checks: can the M1 (dispersive) decoder emit this label, and what
     # does it weigh in the frozen pole loss (sum b^2/a: the cost of a
     # position-matched prediction with t = 0)?
-    from spevae.data.label_bank import _dispersive_gauge
+    from poleflow.data.label_bank import _dispersive_gauge
     disp = float(np.abs(b + _dispersive_gauge(a, b) * a).max()) if a.size else 0.0
     load = float((b ** 2 / np.maximum(a, 1e-30)).sum())
     return g_gap, w1, bsat, disp, load

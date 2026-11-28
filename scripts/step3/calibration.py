@@ -84,8 +84,8 @@ def cell_batch(bank, j):
     Repetition 0 (``j < 12``) is the original design; later repetitions shift
     beta and dtau against the noise grid.  Deterministic in ``j``.
     """
-    from spevae.data.pole_prior import PolePriorGenerator
-    from spevae.posterior import DEFAULT_WINDOWS
+    from poleflow.data.pole_prior import PolePriorGenerator
+    from poleflow.posterior import DEFAULT_WINDOWS
     r_, i_ = divmod(j, len(NOISES))
     nz = NOISES[i_]
     beta = BETAS[(i_ + r_) % len(BETAS)]
@@ -106,7 +106,7 @@ def cell_batch(bank, j):
 
 def count_arm(count_model, b, m, beta, last, j):
     """The posterior arm's samples of truth ``m``, resampled to the classifier's counts."""
-    from spevae.models.count import resample_by_count
+    from poleflow.models.count import resample_by_count
     p_n = count_model.probs(b.G[m], b.x, beta, sigma=b.sigma[m])[0]
     take, cd = resample_by_count(p_n, torch.tensor(last["n"]),
                                  generator=torch.Generator().manual_seed(1300 + 97 * j + m))
@@ -118,7 +118,7 @@ def count_arm(count_model, b, m, beta, last, j):
 
 def recount(src, dst, count_path, bank):
     """Re-score a finished run with another count classifier: same samples, new weights."""
-    from spevae.models.count import load_count
+    from poleflow.models.count import load_count
     torch.set_num_threads(4)                       # as in run(): bit-identical classifier outputs
     count_model = load_count(count_path)
     dst.mkdir(parents=True, exist_ok=True)
@@ -139,10 +139,10 @@ def recount(src, dst, count_path, bank):
 
 
 def run(flow_path, bank, out, shard, nshards, lam=10.0, base_scale=None, reps=1, count_path=None):
-    from spevae.models.flow import load_flow
-    from spevae.physics import PoleGreens
-    from spevae.physics.poles import PoleSet
-    from spevae.posterior import DEFAULT_WINDOWS, continue_posterior
+    from poleflow.models.flow import load_flow
+    from poleflow.physics import PoleGreens
+    from poleflow.physics.poles import PoleSet
+    from poleflow.posterior import DEFAULT_WINDOWS, continue_posterior
 
     torch.set_num_threads(4)
     flow = load_flow(flow_path).eval()
@@ -150,7 +150,7 @@ def run(flow_path, bank, out, shard, nshards, lam=10.0, base_scale=None, reps=1,
         flow.base_scale = float(base_scale)
     count_model = None
     if count_path:
-        from spevae.models.count import load_count
+        from poleflow.models.count import load_count
         count_model = load_count(count_path)
     rows = []
     path = out / f"calibration.shard{shard}.json"

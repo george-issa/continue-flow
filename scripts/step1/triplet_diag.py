@@ -1,12 +1,12 @@
 import sys, torch
 sys.path.insert(0, "src")
-from spevae import load_model
-from spevae.physics.poles import PoleSet
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.physics.consolidate import rank_scan
-from spevae.physics.templates import fit_peaks, peak_starts
-from spevae.losses import spectral_w1
-from spevae.data.noise import NoiseModel, sample_correlated_noise
+from poleflow import load_model
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.physics.consolidate import rank_scan
+from poleflow.physics.templates import fit_peaks, peak_starts
+from poleflow.losses import spectral_w1
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
 beta, ntau, nz = 8.0, 64, 1e-4
 eps, gam, w = [0.4, 1.1, 2.6], [0.35, 0.25, 0.45], [0.5, 0.3, 0.2]
 truth = PoleSet(eps=torch.tensor([eps])*beta, gamma=torch.tensor([gam])*beta,

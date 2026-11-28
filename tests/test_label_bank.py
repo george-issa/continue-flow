@@ -15,7 +15,7 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.data.label_bank import (
+from poleflow.data.label_bank import (
     DIP_TOL,
     EPS_MAX,
     GAM_MAX,
@@ -30,7 +30,7 @@ from spevae.data.label_bank import (
     extract_smooth_label,
     sample_smooth_truth,
 )
-from spevae.physics.forward import PoleGreens, SpectralQuadrature
+from poleflow.physics.forward import PoleGreens, SpectralQuadrature
 
 BETA = 8.0
 
@@ -253,7 +253,7 @@ def test_truncation_residual_pinned_per_family(small_bank):
 # --------------------------------------------------------------------------- #
 
 def test_dispersive_jacobian_matches_finite_differences():
-    from spevae.data import label_bank as LB
+    from poleflow.data import label_bank as LB
     tr = pinned("gauss_mixture")
     om, F = tr.matsubara()
     Fs = np.abs(F).max()
@@ -285,7 +285,7 @@ def test_dispersive_jacobian_matches_finite_differences():
 
 
 def test_dispersive_pack_roundtrip_and_reachability():
-    from spevae.data import label_bank as LB
+    from poleflow.data import label_bank as LB
     gfloor = 1.05 * GAMMA_MIN / BETA
     a = np.array([0.3, 0.2, 0.4, 0.1])
     b = np.array([0.25, -0.32, -0.06, 0.13])
@@ -297,7 +297,7 @@ def test_dispersive_pack_roundtrip_and_reachability():
 
 
 def test_dispersive_label_is_in_the_decoder_map():
-    from spevae.data import label_bank as LB
+    from poleflow.data import label_bank as LB
     lab = LB.extract_smooth_label(pinned("semicircle"), residue_mode="dispersive")
     assert abs(lab.a.sum() - 1) < 1e-12 and abs(lab.b.sum()) < 1e-10
     c = LB._dispersive_gauge(lab.a, lab.b)
@@ -307,7 +307,7 @@ def test_dispersive_label_is_in_the_decoder_map():
 
 def test_ill_conditioned_pseudogap_extracts_without_crashing():
     """Regression: bank_b8 truth #1899 (seed 2) broke the exact TR solve."""
-    from spevae.data.label_bank import SmoothTruth, extract_smooth_label
+    from poleflow.data.label_bank import SmoothTruth, extract_smooth_label
     tr = SmoothTruth("pseudogap", 8.0, {
         "weights": [1.154201187649331, -0.15420118764933097],
         "mus": [-0.002611127528476225, -0.002611127528476225],

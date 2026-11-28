@@ -12,7 +12,7 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.benchmark import (
+from poleflow.benchmark import (
     ContinuationResult,
     agreement_matrix,
     backtransform,
@@ -24,8 +24,8 @@ from spevae.benchmark import (
     run_deac,
     run_maxent,
 )
-from spevae.data import from_bins
-from spevae.physics import PoleGreens, PoleSet, SpectralQuadrature, fermi_kernel
+from poleflow.data import from_bins
+from poleflow.physics import PoleGreens, PoleSet, SpectralQuadrature, fermi_kernel
 
 DT = torch.float64
 BETA = 10.0
@@ -55,14 +55,14 @@ def known_case(n_tau=81, n_bins=800, noise=1e-3, seed=0):
 # --------------------------------------------------------------------------- #
 
 def test_all_three_kernels_agree():
-    """spevae, ana_cont and SmoQyDEAC must define the same K(tau, omega).
+    """poleflow, ana_cont and SmoQyDEAC must define the same K(tau, omega).
 
     A sign or normalisation mismatch between solvers produces plausible-looking
     but incomparable spectra, and nothing downstream would catch it.  The
     conventions are written out here explicitly and checked against this
     package's own kernel:
 
-      spevae   : 1 / (exp(x nu) + exp((x-1) nu)),  x = tau/beta, nu = beta omega
+      poleflow   : 1 / (exp(x nu) + exp((x-1) nu)),  x = tau/beta, nu = beta omega
       ana_cont : exp(-tau omega) / (1 + exp(-omega)) on the same rescaled axes
       SmoQyDEAC: 1 / (exp(omega tau) + exp(-omega (beta - tau)))
     """
@@ -198,7 +198,7 @@ def test_non_overlapping_grids_are_rejected():
 
 def test_resolution_smoothing_suppresses_stochastic_roughness():
     """Peak counts are only comparable once both sides are at one resolution."""
-    from spevae.metrics import find_peaks
+    from poleflow.metrics import find_peaks
 
     omega = np.linspace(-8, 8, 1601)
     smooth = _fake("s", 0.0, omega).A
@@ -225,7 +225,7 @@ def test_maxent_recovers_a_known_two_peak_spectrum():
     assert np.isfinite(res.chi2) and np.isfinite(res.chi2_target)
     assert res.G_recon is not None and res.G_recon.shape == mg.tau.shape
 
-    from spevae.metrics import matched_peak_error
+    from poleflow.metrics import matched_peak_error
     m = matched_peak_error(res.A, A_true, omega, resolution=math.pi / BETA)
     assert m["n_matched"] == 2, m
     assert m["d_omega"] < 0.3, m
@@ -251,7 +251,7 @@ def test_deac_recovers_a_known_two_peak_spectrum():
 
     assert abs(res.norm - np.trapezoid(A_true, omega)) < 0.05
     assert res.A_std is not None and (res.A_std >= 0).all()
-    from spevae.metrics import matched_peak_error
+    from poleflow.metrics import matched_peak_error
     m = matched_peak_error(res.A, A_true, omega, resolution=math.pi / BETA)
     assert m["n_matched"] == 2, m
     assert m["d_omega"] < 0.3, m

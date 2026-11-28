@@ -2,15 +2,15 @@
 import sys, json, torch
 sys.path.insert(0, "src")
 import numpy as np
-from spevae import load_model
-from spevae.refine import (z_descend, refine_latent, RefineConfig,
+from poleflow import load_model
+from poleflow.refine import (z_descend, refine_latent, RefineConfig,
                            prior_count_belief)
-from spevae.physics.poles import PoleSet
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.physics.consolidate import rank_scan
-from spevae.losses import spectral_w1
-from spevae.data.noise import NoiseModel, sample_correlated_noise
-from spevae.data.readers import read_gissa_cube
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.physics.consolidate import rank_scan
+from poleflow.losses import spectral_w1
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
+from poleflow.data.readers import read_gissa_cube
 
 beta = 8.0
 WS = [0.0, 4.0, 16.0, 64.0]

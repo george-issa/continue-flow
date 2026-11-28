@@ -4,7 +4,7 @@
 
 ```bash
 conda env create -f environment.yml
-conda activate spevae
+conda activate poleflow
 pip install -e ".[dev]"
 pytest -n auto
 ```
@@ -32,6 +32,6 @@ script that produced it and a figure.
 
 ## Versions
 
-The version is `__version__` in `src/spevae/__init__.py`. A release is a tag
+The version is `__version__` in `src/poleflow/__init__.py`. A release is a tag
 `vX.Y.Z` on `main` with a section in `CHANGELOG.md`; the tag builds the
 package and opens the GitHub release.

@@ -6,9 +6,9 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.data.label_bank import _dispersive_gauge
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.models.flow import A_DUST, FlowPosterior, PoleCoords, load_flow, save_flow
+from poleflow.data.label_bank import _dispersive_gauge
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.models.flow import A_DUST, FlowPosterior, PoleCoords, load_flow, save_flow
 
 
 @pytest.fixture(scope="module")
@@ -92,8 +92,8 @@ def test_loss_decreases_and_checkpoint_roundtrips(batch, tmp_path):
 
 
 def test_refine_pulls_samples_onto_the_data_and_the_tether_holds():
-    from spevae.evaluation import cases as C
-    from spevae.models.flow import refine_samples
+    from poleflow.evaluation import cases as C
+    from poleflow.models.flow import refine_samples
     torch.manual_seed(0)
     inst = C.draw(C.realize("irregular triplet"), 1e-3, 7)
     tr = inst.truth
@@ -107,7 +107,7 @@ def test_refine_pulls_samples_onto_the_data_and_the_tether_holds():
     norm = torch.ones(4)
     G, s = inst.G.expand(4, -1), inst.sigma.expand(4, -1)
     ps0 = m.coords.decode(z0, norm=norm, nu_max=m.nu_max(8.0))
-    from spevae.physics import PoleGreens
+    from poleflow.physics import PoleGreens
     d0 = ((PoleGreens(tr.quad)(ps0, tr.x) - G) / s) @ inst.isr.T
     chi0 = (d0 * d0).mean(-1)
     ps, chi = refine_samples(m, z0, norm, 8.0, tr.x, G, s, inst.isr, lam=0.1, steps=300)
@@ -168,7 +168,7 @@ def test_feedback_flow_sees_the_likelihood_and_trains(batch, tmp_path):
 
 
 def test_lowered_floor_keeps_the_proposals_and_lets_the_fit_narrow_a_line():
-    from spevae.models.flow import LoweredFloor, refine_samples
+    from poleflow.models.flow import LoweredFloor, refine_samples
     torch.manual_seed(0)
     beta = 8.0
     m = FlowPosterior(d_model=32, enc_layers=1, flow_layers=1, n_heads=2, d_ff=64).eval()
@@ -214,7 +214,7 @@ def test_lowered_floor_keeps_the_proposals_and_lets_the_fit_narrow_a_line():
 
 
 def test_tokens_marked_as_lines_decode_and_fit_as_zero_width_lines():
-    from spevae.models.flow import LoweredFloor, add_pole, refine_samples
+    from poleflow.models.flow import LoweredFloor, add_pole, refine_samples
     torch.manual_seed(0)
     beta = 8.0
     m = FlowPosterior(d_model=32, enc_layers=1, flow_layers=1, n_heads=2, d_ff=64).eval()

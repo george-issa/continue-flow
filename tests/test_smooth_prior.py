@@ -3,9 +3,9 @@
 import pytest
 import torch
 
-from spevae.data.label_bank import build_label_bank
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.physics import PoleGreens
+from poleflow.data.label_bank import build_label_bank
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.physics import PoleGreens
 
 
 @pytest.fixture(scope="module")

@@ -6,7 +6,7 @@ the same data and the same noise redraws:
 
   standard   the floor the model was trained with
   lowered    the floor divided by `factor` (default 4), on a quadrature
-             refined by the same factor (`spevae.models.flow.LoweredFloor`)
+             refined by the same factor (`poleflow.models.flow.LoweredFloor`)
 
 and, for the lowered floor, once more with a weaker tether (1 instead of 10),
 so that a null result cannot be the tether holding the widths at the proposal.
@@ -55,9 +55,9 @@ LABEL = {"standard": "flow, floor as trained", "lowered": "flow, floor lowered i
 
 
 def run_truth(flow, item, beta, noise, arms, factor):
-    from spevae.evaluation import cases as C
-    from spevae.models.flow import LoweredFloor, refine_samples
-    from spevae.posterior import weight_at_width_floor
+    from poleflow.evaluation import cases as C
+    from poleflow.models.flow import LoweredFloor, refine_samples
+    from poleflow.posterior import weight_at_width_floor
     inst = C.draw(item["truth"], noise, J.SEED)
     tr = inst.truth
     L = tr.x.numel()
@@ -132,7 +132,7 @@ def main():
     if sys.argv[1] == "fig":                       # re-render from the stored results
         out = Path(sys.argv[2])
         return render(json.load(open(out / "width_floor_test.json")), out)
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(sys.argv[2]).eval()

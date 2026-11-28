@@ -47,7 +47,7 @@ def ratio_ci(d):
 
 
 def main():
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     out, lo_name, full_name, seeds = Path(sys.argv[1]), sys.argv[2], sys.argv[3], sys.argv[4:]
     out.parent.mkdir(parents=True, exist_ok=True)
     left = set(load_flow(f"out/step3/{lo_name}.pt").meta["recipe"].get("left_out") or [])

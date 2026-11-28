@@ -4,8 +4,8 @@ import math
 
 import torch
 
-from spevae.physics import PoleGreens, PoleSet, SpectralQuadrature, lm_solve, rowwise_jacobian
-from spevae.physics.lsq import BUDGET, STATIONARY, STOPPED
+from poleflow.physics import PoleGreens, PoleSet, SpectralQuadrature, lm_solve, rowwise_jacobian
+from poleflow.physics.lsq import BUDGET, STATIONARY, STOPPED
 
 DD = torch.float64
 

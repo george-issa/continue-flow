@@ -13,9 +13,9 @@ import copy
 import pytest
 import torch
 
-from spevae.data import from_bins
-from spevae.models import SPEVAE
-from spevae.training import FinetuneConfig, finetune
+from poleflow.data import from_bins
+from poleflow.models import SPEVAE
+from poleflow.training import FinetuneConfig, finetune
 
 from test_refine import BETA, decodable_dataset, tiny_model
 
@@ -41,7 +41,7 @@ def test_finetune_improves_the_calibrated_fit():
     model = perturbed_model(seed=3)
     mg, _, _ = decodable_dataset(model, seed=3, n_tau=41, n_bins=400)
     cov = mg.covariance()
-    from spevae.training.finetune import _validate
+    from poleflow.training.finetune import _validate
     before = _validate(model, mg, cov, torch.device("cpu"))
     hist = finetune(model, mg, small_cfg())
     after = hist["final"]
@@ -113,7 +113,7 @@ def test_divergence_guard_skips_and_stops():
 
 
 def test_negativity_penalties_have_correct_shapes_and_zero_floor():
-    from spevae.losses import negativity_penalties, negativity_stencil_weights
+    from poleflow.losses import negativity_penalties, negativity_stencil_weights
     var0 = torch.tensor([0.0, 1.0, 2.0, 1.0, 0.0])   # pinned endpoints
     w = negativity_stencil_weights(var0)
     assert w["inv_var0"][0] == 0.0 and w["inv_var0"][-1] == 0.0

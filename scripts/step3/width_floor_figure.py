@@ -41,10 +41,10 @@ WG, DW = J.WG, J.DW
 
 
 def one(flow, beta, noise, k, lam=10.0):
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.models.flow import refine_samples
-    from spevae.posterior import weight_at_width_floor
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.models.flow import refine_samples
+    from poleflow.posterior import weight_at_width_floor
     item = [t for t in J.make_truths(beta) if t["kind"] == "discrete"][k]
     inst = C.draw(item["truth"], noise, J.SEED)
     tr = inst.truth
@@ -78,7 +78,7 @@ def one(flow, beta, noise, k, lam=10.0):
 
 
 def main():
-    from spevae.models.flow import load_flow
+    from poleflow.models.flow import load_flow
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     flow = load_flow(sys.argv[2]).eval()

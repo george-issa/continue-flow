@@ -38,9 +38,9 @@ FLOW, VAE, ME, INK = "#2a78d6", "#eb6834", "#7d7c78", "#0b0b0b"
 
 
 def run(flow, vae, noise):
-    from spevae.evaluation import cases as C
-    from spevae.evaluation import methods as M
-    from spevae.models.flow import refine_samples
+    from poleflow.evaluation import cases as C
+    from poleflow.evaluation import methods as M
+    from poleflow.models.flow import refine_samples
     rows, curves = {}, {}
     for case in C.CASES:
         inst = C.draw(C.realize(case), noise, SEED)
@@ -123,8 +123,8 @@ def fig(rows, curves, path, noise):
 
 
 def main():
-    from spevae import load_model
-    from spevae.models.flow import load_flow
+    from poleflow import load_model
+    from poleflow.models.flow import load_flow
     torch.set_num_threads(6)
     flow, vae, out = load_flow(sys.argv[1]).eval(), load_model(sys.argv[2]), Path(sys.argv[3])
     out.mkdir(parents=True, exist_ok=True)

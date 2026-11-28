@@ -5,7 +5,7 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 sys.path.insert(0, "src")
-from spevae.physics.templates import chi2_quantile_95
+from poleflow.physics.templates import chi2_quantile_95
 plt.rcParams.update({"font.size": 8.5, "axes.titlesize": 9, "axes.labelsize": 9,
                      "xtick.labelsize": 7.5, "ytick.labelsize": 7.5,
                      "axes.linewidth": 0.7, "axes.edgecolor": "#3A3F45"})

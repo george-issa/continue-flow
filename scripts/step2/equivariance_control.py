@@ -20,8 +20,8 @@ from pathlib import Path
 sys.path.insert(0, "src")
 import torch
 
-from spevae import load_model
-from spevae.models.equivariant import MirrorSymmetrized, union_half
+from poleflow import load_model
+from poleflow.models.equivariant import MirrorSymmetrized, union_half
 
 torch.set_num_threads(2)
 TAG, CKPT, PART = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -58,9 +58,9 @@ f = load_model(CKPT)
 rep = {"ckpt": CKPT}
 
 if PART == "holstein":
-    from spevae.data.readers import read_gissa_cube
-    from spevae.models.equivariant import reflect_tau
-    from spevae.refine import RefineConfig, refine_latent
+    from poleflow.data.readers import read_gissa_cube
+    from poleflow.models.equivariant import reflect_tau
+    from poleflow.refine import RefineConfig, refine_latent
     CUBE = ("/Users/gissa/Documents/AC/SPE-AC-VAE-old/Data/datasets/real/"
             "gIssa/for_george_ac.jld2")
     mg = read_gissa_cube(CUBE, beta=8.0, omega=1.0, n=1.0, lam=0.325)
@@ -91,8 +91,8 @@ elif PART == "probes":
     src = Path("scripts/step2/equivariance_test.py").read_text().split("def run_probes")[0]
     ns = {"__name__": "eqt_defs"}
     exec(compile(src, "equivariance_test_defs", "exec"), ns)
-    from spevae.data.noise import NoiseModel, sample_correlated_noise
-    from spevae.refine import z_descend
+    from poleflow.data.noise import NoiseModel, sample_correlated_noise
+    from poleflow.refine import z_descend
     m = Mixture2(f, 0)
     for nz in (1e-4, 1e-3):
         for name, (A_true, G_clean) in ns["TRUTHS"].items():

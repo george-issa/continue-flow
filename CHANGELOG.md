@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The package and the command are renamed from `spevae` to `poleflow`, and
+  the repository from `continue-flow` to `poleflow`.
 - Bins that stop at β − Δτ are read: G(β) = 1 − G(0) is appended
   (`--endpoint`, decided from the data by default).
 - A spin-summed G, a transposed file and values that are not numbers are
@@ -9,7 +11,7 @@
 
 ## 0.1.0
 
-First tagged version.
+First tagged version, under the name `spevae`.
 
 - `spevae continue` with a flow checkpoint prints the posterior report: how
   well the samples fit the bins, the spectral weight per frequency window with

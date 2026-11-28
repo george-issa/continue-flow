@@ -1,6 +1,6 @@
 """End-to-end CLI: the exact path a new user walks.
 
-Runs ``spevae continue`` / ``finetune`` / ``info`` through ``cli.main(argv)``
+Runs ``poleflow continue`` / ``finetune`` / ``info`` through ``cli.main(argv)``
 on a temp-dir dataset generated from a tiny model, checking the artefacts on
 disk rather than the console text -- the .npz with the pole set is the
 contract.
@@ -12,8 +12,8 @@ import numpy as np
 import pytest
 import torch
 
-from spevae import save_model
-from spevae.cli import main
+from poleflow import save_model
+from poleflow.cli import main
 
 from test_refine import BETA, decodable_dataset, tiny_model
 
@@ -75,7 +75,7 @@ def test_finetune_roundtrip(workspace, capsys):
           "--checkpoint", str(workspace["ckpt"]), "--out", str(out),
           "--steps", "40", "--batch-size", "16", "--eval-every", "20"])
     assert out.exists()
-    from spevae import load_checkpoint, load_model
+    from poleflow import load_checkpoint, load_model
     tuned = load_model(str(out))
     assert tuned.num_poles == 8
     meta = load_checkpoint(str(out))["meta"]

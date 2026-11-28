@@ -15,7 +15,7 @@ works directly. If your data lives in a SmoQyDQMC simulation directory or one
 of the Holstein cubes, the readers export it:
 
 ```python
-from spevae.data import read_smoqy_dir
+from poleflow.data import read_smoqy_dir
 import numpy as np
 
 mg = read_smoqy_dir("path/to/hubbard_square_U6.00_mu0.00_L4_b10.00-1")
@@ -43,7 +43,7 @@ package prints comes with that target next to it.
 ## 1. Pretrain once (or reuse a checkpoint)
 
 ```bash
-spevae pretrain --preset fast --out out/model.pt --device mps
+poleflow pretrain --preset fast --out out/model.pt --device mps
 ```
 
 A 27-minute laptop run. On the frozen held-out stream, every metric improved
@@ -55,7 +55,7 @@ there is nothing to overfit.
 ## 2. Continue
 
 ```bash
-spevae continue --bins hubbard_bins.txt --beta 10.0 --checkpoint out/model.pt \
+poleflow continue --bins hubbard_bins.txt --beta 10.0 --checkpoint out/model.pt \
                 --out hubbard.npz --figure hubbard.png
 ```
 
@@ -83,7 +83,7 @@ excluded from the whitened χ² and reported separately.
 ## 3. Fine-tune to the cell (Stage 2)
 
 ```bash
-spevae finetune --bins hubbard_bins.txt --beta 10.0 --checkpoint out/model.pt \
+poleflow finetune --bins hubbard_bins.txt --beta 10.0 --checkpoint out/model.pt \
                 --out out/model-hubbard.pt --steps 2000 --device mps
 ```
 
@@ -100,7 +100,7 @@ pole usage inflated 2.30 → 11.08 as surplus poles woke up to fit noise).
 ## 4. Refine per input (Stage 3)
 
 ```bash
-spevae continue --bins hubbard_bins.txt --beta 10.0 \
+poleflow continue --bins hubbard_bins.txt --beta 10.0 \
                 --checkpoint out/model-hubbard.pt --refine --refine-steps 3000 \
                 --out hubbard_refined.npz
 ```

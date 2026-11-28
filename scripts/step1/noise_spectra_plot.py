@@ -4,12 +4,12 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 sys.path.insert(0, "src")
-from spevae import load_model
-from spevae.physics.poles import PoleSet
-from spevae.physics.forward import SpectralQuadrature, PoleGreens
-from spevae.physics.consolidate import rank_scan
-from spevae.losses import spectral_w1
-from spevae.data.noise import NoiseModel, sample_correlated_noise
+from poleflow import load_model
+from poleflow.physics.poles import PoleSet
+from poleflow.physics.forward import SpectralQuadrature, PoleGreens
+from poleflow.physics.consolidate import rank_scan
+from poleflow.losses import spectral_w1
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
 
 plt.rcParams.update({"font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8.5,
                      "xtick.labelsize": 7.5, "ytick.labelsize": 7.5,

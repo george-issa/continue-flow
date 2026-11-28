@@ -14,7 +14,7 @@ import math
 import pytest
 import torch
 
-from spevae.data import (
+from poleflow.data import (
     FAMILIES,
     NoiseModel,
     SyntheticGenerator,
@@ -25,7 +25,7 @@ from spevae.data import (
     sample_spectra,
     whitener,
 )
-from spevae.losses import (
+from poleflow.losses import (
     chi2,
     kl_divergence,
     noise_consistency,
@@ -33,7 +33,7 @@ from spevae.losses import (
     spectral_multiscale_l2,
     spectral_w1,
 )
-from spevae.physics import PoleGreens, SpectralQuadrature
+from poleflow.physics import PoleGreens, SpectralQuadrature
 
 DT = torch.float64
 

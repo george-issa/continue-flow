@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 import torch
 
-from spevae.data import exact_models as X
+from poleflow.data import exact_models as X
 
 
 def _bz_sum_2d(eps_fn, z, n=600):
@@ -189,7 +189,7 @@ def test_exact_pole_truths_are_valid_pole_sets_inside_the_band_box():
 
 
 def test_line_spectra_go_through_the_canonical_label_protocol():
-    from spevae.data.label_bank import extract_smooth_label
+    from poleflow.data.label_bank import extract_smooth_label
     sp = X.holstein_atom(omega0=0.8, g=1.1, U=0.0, mu=0.4, beta=8.0)
     # the protocol's inputs, each against its definition
     om, F = sp.matsubara(8)
@@ -200,7 +200,7 @@ def test_line_spectra_go_through_the_canonical_label_protocol():
     assert sp.support_bound() >= np.abs(sp.energies[w > 1e-6]).max()
     # a dense ladder of lines is representable: the label reproduces the exact G(tau)
     lab = extract_smooth_label(sp, P_max=12, residue_mode="dispersive")
-    from spevae.physics import PoleGreens, PoleSet, SpectralQuadrature
+    from poleflow.physics import PoleGreens, PoleSet, SpectralQuadrature
     ps = PoleSet(*(torch.tensor(np.asarray(v), dtype=torch.float64).unsqueeze(0)
                    for v in (lab.eps * 8.0, lab.gamma * 8.0, lab.a, lab.b)))
     x = np.linspace(0.0, 1.0, 65)

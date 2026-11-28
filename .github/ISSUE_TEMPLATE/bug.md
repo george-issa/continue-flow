@@ -13,5 +13,5 @@ The full error message.
 
 **Versions**
 
-The output of `spevae --version`, the Python version, the PyTorch version and
+The output of `poleflow --version`, the Python version, the PyTorch version and
 the operating system.

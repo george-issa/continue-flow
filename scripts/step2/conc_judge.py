@@ -16,13 +16,13 @@ sys.path.insert(0, "src")
 import numpy as np
 import torch
 
-from spevae import load_model
-from spevae.data.noise import NoiseModel, sample_correlated_noise
-from spevae.data.pole_prior import PolePriorGenerator
-from spevae.losses import chi2 as chi2_fn, spectral_w1
-from spevae.physics.forward import PoleGreens, SpectralQuadrature
-from spevae.physics.poles import PoleSet, effective_pole_count
-from spevae.refine import z_descend
+from poleflow import load_model
+from poleflow.data.noise import NoiseModel, sample_correlated_noise
+from poleflow.data.pole_prior import PolePriorGenerator
+from poleflow.losses import chi2 as chi2_fn, spectral_w1
+from poleflow.physics.forward import PoleGreens, SpectralQuadrature
+from poleflow.physics.poles import PoleSet, effective_pole_count
+from poleflow.refine import z_descend
 
 torch.set_num_threads(3)
 OUT = Path("out/step2/conc")

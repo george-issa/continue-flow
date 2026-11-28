@@ -21,9 +21,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from spevae import load_model
-from spevae.data import SyntheticGenerator
-from spevae.metrics import spectral_report
+from poleflow import load_model
+from poleflow.data import SyntheticGenerator
+from poleflow.metrics import spectral_report
 
 FAMILIES = ["gauss_mixture", "gapped", "metal_hubbard",
             "phonon", "bcs", "semicircle"]
@@ -85,7 +85,7 @@ def main() -> None:
         if A_sd is not None:
             ax.fill_between(omega, A - A_sd, A + A_sd, color="#0072B2",
                             alpha=0.22, lw=0)
-        ax.plot(omega, A, color="#0072B2", lw=1.7, label="spevae")
+        ax.plot(omega, A, color="#0072B2", lw=1.7, label="poleflow")
         ax.axhline(0, color="0.8", lw=0.7, zorder=0)
         ax.set_title(f"{fam}   $\\beta$={beta:.1f}", fontsize=10)
         ax.set_xlabel(r"$\omega$")
